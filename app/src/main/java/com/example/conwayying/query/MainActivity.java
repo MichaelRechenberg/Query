@@ -11,7 +11,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.conwayying.query.data.AcademicClassRepository;
+import com.example.conwayying.query.data.LectureDatabase;
+import com.example.conwayying.query.data.LectureRepository;
 import com.example.conwayying.query.data.entity.AcademicClass;
+import com.example.conwayying.query.data.entity.Lecture;
+
+import java.util.Calendar;
 
 
 // Test Room code using a dummy AsyncTask (since you cannot query Room
@@ -44,6 +49,21 @@ class TestDBAsyncTask extends AsyncTask<TestDBParams, Void, Long> {
         }
 
         Log.d("Foo", repo.getAcademicClass(3).toString());
+
+        LectureRepository lectureRepo = new LectureRepository(params[0].application);
+        Lecture testLecture = new Lecture(Calendar.getInstance().getTime(), 1);
+        try {
+           lectureRepo.insert(testLecture);
+
+           for(Lecture lecture : lectureRepo.getAllLecturesForClass(1)){
+               Log.d("Foo", "Lecture id " + lecture.getLectureId() + " was given on " + lecture.getLectureDate().toString() + " and is assoc w/ class id " + lecture.getClassId());
+           }
+        }
+        catch (Exception e){
+            Log.e("Foo", "Error in testing Lecture room code");
+            Log.e("Foo", e.toString());
+            throw e;
+        }
 
         return new Long(0);
     }
