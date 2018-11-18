@@ -11,7 +11,7 @@ public class LectureRepository {
     private LectureDao mLectureDao;
 
     public LectureRepository(Application application){
-        mLectureDao =  LectureDatabase.getDatabase(application).getLectureDao();
+        mLectureDao = LectureDatabase.getDatabase(application).getLectureDao();
     }
 
     /**

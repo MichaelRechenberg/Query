@@ -11,7 +11,7 @@ public class AcademicClassRepository {
     private AcademicClassDao mAcademicClassDao;
 
     public AcademicClassRepository(Application application){
-       mAcademicClassDao =  AcademicClassDatabase.getDatabase(application).getAcademicClassDao();
+       mAcademicClassDao = AcademicClassDatabase.getDatabase(application).getAcademicClassDao();
     }
 
     public List<AcademicClass> getAllClasses(){

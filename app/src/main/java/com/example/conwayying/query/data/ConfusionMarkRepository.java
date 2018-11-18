@@ -12,7 +12,7 @@ public class ConfusionMarkRepository {
     private ConfusionMarkDao mConfusionMarkDao;
 
     public ConfusionMarkRepository(Application application){
-        mConfusionMarkDao =  ConfusionMarkDatabase.getDatabase(application).getConfusionMarkDao();
+        mConfusionMarkDao = ConfusionMarkDatabase.getDatabase(application).getConfusionMarkDao();
     }
 
     /**
