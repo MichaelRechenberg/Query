@@ -30,10 +30,6 @@ public interface ConfusionMarkDao {
     @Query("SELECT * FROM ConfusionMark WHERE lecture_id = :lectureId")
     List<ConfusionMark> getAllConfusionMarksForLecture(int lectureId);
 
-    // TODO: Figure out why this always returns no results
-    // I think the issue is that we are trying to refer to another table (Lecture) other than ConfusionMark
-    // I tried running (SELECT * FROM Lecture) in a separate query and this returned 0 results
-    // Perhaps use @RawQuery? Perhaps its a limitation with SQLlite?
     /**
      * @param classId Id of the AcademicClass you want to retrieve all ConfusionMarks for
      * @return The ConfusionMarks for all Lectures that associated with a specified AcademicClass
@@ -41,7 +37,7 @@ public interface ConfusionMarkDao {
     @Query(
             "SELECT *" +
             "FROM ConfusionMark " +
-            "WHERE ConfusionMark.lecture_id IN (SELECT Lecture.lecture_id AS foo FROM Lecture WHERE Lecture.class_id = :classId)"
+            "WHERE ConfusionMark.lecture_id IN (SELECT Lecture.lecture_id FROM Lecture WHERE Lecture.class_id = :classId)"
     )
     List<ConfusionMark> getAllConfusionMarksForClass(int classId);
 }
