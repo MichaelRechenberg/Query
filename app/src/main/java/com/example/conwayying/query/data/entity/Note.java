@@ -27,13 +27,20 @@ public class Note {
     @ColumnInfo(name = "note_text")
     private String mNoteText;
 
-    // Flag indicating if this note is still private (haven't sent it to lecturer)
+    // Flag indicating if this note is still private (true if haven't sent it to lecturer)
     @NonNull
     @ColumnInfo(name ="is_private")
     private boolean mIsPrivate;
 
+    // Boolean indicating whether this Note is resolved or not (e.g. does the student
+    //  now understand what made him/her confused when they made this Note)
+    @NonNull
+    @ColumnInfo(name = "is_resolved")
+    private boolean mIsResolved;
+
     /**
-     * Construct a new Note. It is automatically set to being private
+     * Construct a new Note. It is automatically set to being private and unresolved
+     *
      * @param lectureId The id of the Lecture this Note is associated with
      * @param noteText The actual text of the note
      */
@@ -41,6 +48,7 @@ public class Note {
         this.mLectureId = lectureId;
         this.mNoteText = noteText;
         this.mIsPrivate = true;
+        this.mIsResolved = false;
     }
 
     public int getNoteId() {
@@ -73,5 +81,13 @@ public class Note {
 
     public void setIsPrivate(boolean mIsPrivate) {
         this.mIsPrivate = mIsPrivate;
+    }
+
+    public boolean getIsResolved() {
+        return mIsResolved;
+    }
+
+    public void setIsResolved(boolean isResolved) {
+        this.mIsResolved = isResolved;
     }
 }
