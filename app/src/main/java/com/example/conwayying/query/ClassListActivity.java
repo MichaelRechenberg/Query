@@ -11,6 +11,7 @@ import com.example.conwayying.query.data.QueryAppRepository;
 import com.example.conwayying.query.data.entity.AcademicClass;
 import com.example.conwayying.query.data.entity.AcademicClassDao;
 import com.example.conwayying.query.data.entity.Lecture;
+import com.example.conwayying.query.data.entity.Note;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +63,10 @@ public class ClassListActivity extends Activity {
             AcademicClass class1 = new AcademicClass("CS 465");
             long classId = repo.insert(class1);
             Lecture lecture = new Lecture(new Date(), (int) classId);
-            repo.insert(lecture);
+            long lectureId = repo.insert(lecture);
+            repo.insert(new Note((int) lectureId, "Conway is cool"));
+            repo.insert(new Note((int) lectureId, "Mike is cool"));
+            repo.insert(new Note((int) lectureId, "Heather is cool"));
 
             return null;
         }
