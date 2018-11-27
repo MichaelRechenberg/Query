@@ -23,12 +23,6 @@ public class LectureListAdapter extends RecyclerView.Adapter<LectureListAdapter.
         private LectureViewHolder(View itemView) {
             super(itemView);
             classItemView = itemView.findViewById(R.id.textView);
-            classItemView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Log.d("Clicked", "Hello");
-                    mContext.startActivity(new Intent(mContext, LectureListActivity.class));
-                }
-            });
         }
 
 
@@ -51,12 +45,6 @@ public class LectureListAdapter extends RecyclerView.Adapter<LectureListAdapter.
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item, parent, false);
 
         Log.d("OnCreateViewHolder", "Added to list");
-        itemView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Log.d("Clicked", "Hello");
-                mContext.startActivity(new Intent(mContext, LectureListActivity.class));
-            }
-        });
         return new LectureViewHolder(itemView);
     }
 
@@ -64,8 +52,14 @@ public class LectureListAdapter extends RecyclerView.Adapter<LectureListAdapter.
     public void onBindViewHolder(LectureViewHolder holder, int position) {
         Log.d("Binding", "Binding view");
         if (mClasses != null) {
-            Lecture current = mClasses.get(position);
+            final Lecture current = mClasses.get(position);
             holder.classItemView.setText(current.getLectureDate().toString());
+            holder.classItemView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    // Change the LectureListActivity to what it needs to go to next
+                    mContext.startActivity(new Intent(mContext, MainActivity.class).putExtra("LectureId", current.getLectureId()));
+                }
+            });
         } else {
             holder.classItemView.setText("No Classes");
         }

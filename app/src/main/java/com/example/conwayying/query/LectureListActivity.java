@@ -22,10 +22,14 @@ public class LectureListActivity extends Activity {
         setContentView(R.layout.activity_lecture_list);
 
         List<Lecture> mClasses = new ArrayList<>();
-        //QueryAppRepository repo = new QueryAppRepository(getApplication());
+
+        int cid = getIntent().getIntExtra("ClassId", -1);
+        Log.d("CLASS ID", "" + cid);
 
         Lecture class1 = new Lecture(new Date(), 1);
+        class1.setLectureId(0);
         Lecture class2 = new Lecture(new Date(), 1);
+        class2.setLectureId(1);
         mClasses.add(class1);
         mClasses.add(class2);
 

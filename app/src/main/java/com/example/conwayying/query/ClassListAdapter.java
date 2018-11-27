@@ -23,12 +23,6 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Clas
         private ClassViewHolder(View itemView) {
             super(itemView);
             classItemView = itemView.findViewById(R.id.textView);
-            classItemView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Log.d("Clicked", "Hello");
-                    mContext.startActivity(new Intent(mContext, LectureListActivity.class));
-                }
-            });
         }
 
 
@@ -49,14 +43,6 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Clas
     @Override
     public ClassViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item, parent, false);
-
-        Log.d("OnCreateViewHolder", "Added to list");
-        itemView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Log.d("Clicked", "Hello");
-                mContext.startActivity(new Intent(mContext, LectureListActivity.class));
-            }
-        });
         return new ClassViewHolder(itemView);
     }
 
@@ -64,8 +50,14 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Clas
     public void onBindViewHolder(ClassViewHolder holder, int position) {
         Log.d("Binding", "Binding view");
         if (mClasses != null) {
-            AcademicClass current = mClasses.get(position);
+            final AcademicClass current = mClasses.get(position);
             holder.classItemView.setText(current.getClassTitle());
+            holder.classItemView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Log.d("Clicked", "Hello");
+                    mContext.startActivity(new Intent(mContext, LectureListActivity.class).putExtra("ClassId", current.getClassId()));
+                }
+            });
         } else {
             holder.classItemView.setText("No Classes");
         }

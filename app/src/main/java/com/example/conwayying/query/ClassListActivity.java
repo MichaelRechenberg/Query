@@ -31,7 +31,9 @@ public class ClassListActivity extends Activity {
         Log.d("Populated", "We populated");
 
         AcademicClass class1 = new AcademicClass("CS 465");
+        class1.setClassId(0);
         AcademicClass class2 = new AcademicClass("CS 233");
+        class2.setClassId(1);
         mClasses.add(class1);
         mClasses.add(class2);
 
