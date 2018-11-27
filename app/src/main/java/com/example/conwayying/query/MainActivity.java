@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.conwayying.query.data.MyListFragment;
 import com.example.conwayying.query.data.QuestionsFragment;
 import com.example.conwayying.query.data.TimestampsFragment;
 
@@ -24,17 +25,19 @@ public class MainActivity extends AppCompatActivity implements QuestionsFragment
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedFragment = null;
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_questions:
-                    selectedFragment = QuestionsFragment.newInstance("lol", "zors");
+                    MyListFragment mlf = new MyListFragment();
+                    transaction.replace(R.id.frame_layout, mlf);
+                    transaction.commit();
                     break;
                 case R.id.navigation_timestamps:
                     selectedFragment = TimestampsFragment.newInstance("lol", "zors");
+                    transaction.replace(R.id.frame_layout, selectedFragment);
+                    transaction.commit();
                     break;
             }
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.frame_layout, selectedFragment);
-            transaction.commit();
             return true;
         }
 
@@ -54,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements QuestionsFragment
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, QuestionsFragment.newInstance("lol", "zors"));
+        transaction.replace(R.id.frame_layout, new MyListFragment());
         transaction.commit();
     }
 
