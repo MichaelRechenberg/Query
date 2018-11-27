@@ -47,6 +47,7 @@ public abstract class QueryAppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             QueryAppDatabase.class, "query_room_database")
+                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
