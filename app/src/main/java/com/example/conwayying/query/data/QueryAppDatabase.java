@@ -1,9 +1,12 @@
 package com.example.conwayying.query.data;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.conwayying.query.data.entity.AcademicClass;
 import com.example.conwayying.query.data.entity.AcademicClassDao;
@@ -13,6 +16,10 @@ import com.example.conwayying.query.data.entity.Lecture;
 import com.example.conwayying.query.data.entity.LectureDao;
 import com.example.conwayying.query.data.entity.Note;
 import com.example.conwayying.query.data.entity.NoteDao;
+
+import java.util.Date;
+
+import io.reactivex.annotations.NonNull;
 
 /**
  * Database for all Entities for the Query app
@@ -49,5 +56,45 @@ public abstract class QueryAppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
+
+    /**
+     * Instantiates the database each time
+
+    private static RoomDatabase.Callback sRoomDatabaseCallback =
+            new RoomDatabase.Callback(){
+
+            @Override
+            public void onOpen(@NonNull SupportSQLiteDatabase db) {
+                super.onOpen(db);
+               new PopulateDbAsync(INSTANCE).execute();
+            }
+    };
+
+    /**
+     * AsyncTask to delete contents of database, then populates it
+
+    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
+
+        private final LectureDao mDao;
+        private final AcademicClassDao classDao;
+
+        PopulateDbAsync(QueryAppRepository db) {
+            mDao = db.getLecture();
+            classDao = db.getAcademicClass();
+        }
+
+        // insert returns a long
+        @Override
+        protected Void doInBackground(final Void... params) {
+            classDao.deleteAll();
+            AcademicClass class1 = new AcademicClass("CS 465");
+            long classId = classDao.insert(class1);
+            mDao.deleteAll();
+            Lecture lecture = new Lecture(new Date(), (int) classId);
+            mDao.insert(lecture);
+
+            return null;
+        }
+    }*/
 
 }
