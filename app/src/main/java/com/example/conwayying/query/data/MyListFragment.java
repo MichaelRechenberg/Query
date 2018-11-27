@@ -1,5 +1,6 @@
 package com.example.conwayying.query.data;
 
+import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,10 @@ import android.app.ListFragment;
 import android.widget.Toast;
 
 import com.example.conwayying.query.R;
+import com.example.conwayying.query.data.entity.Note;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,12 +32,28 @@ import com.example.conwayying.query.R;
  * Use the {@link ListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+// References
+// https://gist.github.com/ar-android/002d77cbd935f970ef5c
 public class MyListFragment extends android.support.v4.app.ListFragment {
 
     private String dataArray[];
+    private QueryAppRepository qar;
+    private OnFragmentInteractionListener mListener;
 
-    public MyListFragment() {
+    public MyListFragment(QueryAppRepository qar) {
         dataArray = new String[] { "One", "Two", "Three", };
+        this.qar = qar;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
@@ -55,6 +76,11 @@ public class MyListFragment extends android.support.v4.app.ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        List<Note> notesList = qar.getAllNotesForClass(1);
+        List<String> notes = new ArrayList();
+        for (Note note : notesList) {
+            notes.add(note.getNoteText());
+        }
         String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
                 "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
                 "Linux", "OS/2",
@@ -65,7 +91,7 @@ public class MyListFragment extends android.support.v4.app.ListFragment {
                 "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
         };
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, values);
+                android.R.layout.simple_list_item_1, notes);
         setListAdapter(adapter);
     }
 
@@ -75,5 +101,10 @@ public class MyListFragment extends android.support.v4.app.ListFragment {
         Toast.makeText(getActivity(),
                 getListView().getItemAtPosition(position).toString(),
                 Toast.LENGTH_LONG).show();
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
 }

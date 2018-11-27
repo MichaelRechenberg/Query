@@ -11,13 +11,15 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.conwayying.query.data.MyListFragment;
+import com.example.conwayying.query.data.QueryAppRepository;
 import com.example.conwayying.query.data.QuestionsFragment;
 import com.example.conwayying.query.data.TimestampsFragment;
 
 
-public class MainActivity extends AppCompatActivity implements QuestionsFragment.OnFragmentInteractionListener, TimestampsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements MyListFragment.OnFragmentInteractionListener, TimestampsFragment.OnFragmentInteractionListener {
 
     private TextView mTextMessage;
+    private QueryAppRepository queryAppRepository;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements QuestionsFragment
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_questions:
-                    MyListFragment mlf = new MyListFragment();
+                    MyListFragment mlf = new MyListFragment(queryAppRepository);
                     transaction.replace(R.id.frame_layout, mlf);
                     transaction.commit();
                     break;
@@ -56,8 +58,10 @@ public class MainActivity extends AppCompatActivity implements QuestionsFragment
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        queryAppRepository = new QueryAppRepository(getApplication());
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, new MyListFragment());
+        transaction.replace(R.id.frame_layout, new MyListFragment(queryAppRepository));
         transaction.commit();
     }
 
