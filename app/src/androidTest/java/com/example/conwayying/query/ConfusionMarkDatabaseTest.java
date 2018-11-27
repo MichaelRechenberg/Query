@@ -4,12 +4,15 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Pair;
 
 import com.example.conwayying.query.data.QueryAppDatabase;
+import com.example.conwayying.query.data.QueryAppRepository;
 import com.example.conwayying.query.data.entity.AcademicClass;
 import com.example.conwayying.query.data.entity.ConfusionMark;
 import com.example.conwayying.query.data.entity.ConfusionMarkDao;
 import com.example.conwayying.query.data.entity.Lecture;
+import com.example.conwayying.query.data.entity.NoteDao;
 
 import junit.framework.Assert;
 
@@ -110,5 +113,53 @@ public class ConfusionMarkDatabaseTest {
         Assert.assertEquals(2 + 3, confusionMarkDao.getAllConfusionMarksForClass(cs357Id.intValue()).size());
         Assert.assertEquals(7, confusionMarkDao.getAllConfusionMarksForClass(cs465Id.intValue()).size());
         Assert.assertEquals(0, confusionMarkDao.getAllConfusionMarksForClass(Integer.MAX_VALUE - 1).size());
+    }
+
+    @Test
+    public void testResolvedConfusionMarkCount() throws Exception {
+        // Arrange
+        QueryAppRepository repo = new QueryAppRepository(queryAppDB);
+
+
+        int testClassId = repo.insert(new AcademicClass("Test Class Title")).intValue();
+        int lectureAId = repo.insert(new Lecture(Calendar.getInstance().getTime(), testClassId)).intValue();
+        int lectureBId = repo.insert(new Lecture(Calendar.getInstance().getTime(), testClassId)).intValue();
+
+        int otherTestClassId = repo.insert(new AcademicClass("Other Test Class Title")).intValue();
+        int otherLectureId = repo.insert(new Lecture(Calendar.getInstance().getTime(), otherTestClassId)).intValue();
+
+        // Act
+
+        // Add 3 confusion marks to lectureA, 2 of which are unresolved
+        repo.insert(new ConfusionMark(Calendar.getInstance().getTime(), lectureAId));
+        repo.insert(new ConfusionMark(Calendar.getInstance().getTime(), lectureAId));
+
+        ConfusionMark c = new ConfusionMark(Calendar.getInstance().getTime(), lectureAId);
+        c.setIsResolved(true);
+        repo.insert(c);
+
+
+        // Add 2 confusion marks to lecture B, one which is resolved and one that is unresolved
+        repo.insert(new ConfusionMark(Calendar.getInstance().getTime(), lectureBId));
+        c = new ConfusionMark(Calendar.getInstance().getTime(), lectureBId);
+        c.setIsResolved(true);
+        repo.insert(c);
+
+        // Add 2 confusion marks to otherLectureId, one which is resolved and one that is unresolved
+        repo.insert(new ConfusionMark(Calendar.getInstance().getTime(), otherLectureId));
+        c = new ConfusionMark(Calendar.getInstance().getTime(), otherLectureId);
+        c.setIsResolved(true);
+        repo.insert(c);
+
+        // Assert
+
+        // Per-lecture asserts
+        Assert.assertEquals(new Pair<Integer, Integer>(1, 2), repo.getConfusionMarkResolvedCountForLecture(lectureAId));
+        Assert.assertEquals(new Pair<Integer, Integer>(1, 1), repo.getConfusionMarkResolvedCountForLecture(lectureBId));
+        Assert.assertEquals(new Pair<Integer, Integer>(0, 0), repo.getConfusionMarkResolvedCountForLecture(1337));
+
+        // Per-class asserts
+        Assert.assertEquals(new Pair<Integer, Integer>(2, 3), repo.getConfusionMarkResolvedCountForClass(testClassId));
+        Assert.assertEquals(new Pair<Integer, Integer>(0, 0), repo.getConfusionMarkResolvedCountForClass(1337));
     }
 }

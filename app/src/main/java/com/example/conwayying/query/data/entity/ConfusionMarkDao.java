@@ -31,6 +31,14 @@ public interface ConfusionMarkDao {
     List<ConfusionMark> getAllConfusionMarksForLecture(int lectureId);
 
     /**
+     * Modify the isResolved field for a given ConfusionMark
+     * @param confusionMarkId Id of the ConfusionMark to modify
+     * @param isResolved Boolean of if the ConfusionMark is resolved or not
+     */
+    @Query("UPDATE ConfusionMark SET is_resolved = :isResolved WHERE confusion_id = :confusionMarkId")
+    void setIsResolved(int confusionMarkId, boolean isResolved);
+
+    /**
      * @param classId Id of the AcademicClass you want to retrieve all ConfusionMarks for
      * @return The ConfusionMarks for all Lectures that associated with a specified AcademicClass
      */

@@ -34,15 +34,28 @@ public class ConfusionMark {
     @ColumnInfo(name = "end_datetime")
     private Date mEndDate;
 
+    // The Lecture that this ConfusionMark was made for
     @ForeignKey(entity = Lecture.class, parentColumns = "lecture_id", childColumns = "lecture_id")
     @NonNull
     @ColumnInfo(name = "lecture_id")
     private int mLectureId;
 
+    // Boolean indicating whether this ConfusionMark is resolved or not (e.g. does the student
+    //  now understand what made him/her confused when they made this ConfusionMark)
+    @NonNull
+    @ColumnInfo(name = "is_resolved")
+    private boolean mIsResolved;
+
     /**
      * Represent a confusion mark
      *
-     * To represent an interval of time, use setEndDate()
+     * By default, the endDate and isResolved fields are set to null and false, respectively
+     *
+     * To represent an interval of time, set endDate with setEndDate after calling
+     *  the constructor
+     *
+     * To mark a ConfusionMark as resolved, call setIsResolved()
+     *
      * @param startDate The start date for the confusion mark
      * @param lectureId The id of the lecture that this confusion mark was made for
      */
@@ -50,6 +63,7 @@ public class ConfusionMark {
         this.mStartDate = startDate;
         this.mEndDate = null;
         this.mLectureId = lectureId;
+        this.mIsResolved = false;
     }
 
     /**
@@ -90,5 +104,13 @@ public class ConfusionMark {
 
     public void setLectureId(int mLectureId) {
         this.mLectureId = mLectureId;
+    }
+
+    public boolean getIsResolved() {
+        return mIsResolved;
+    }
+
+    public void setIsResolved(boolean isResolved) {
+        this.mIsResolved = isResolved;
     }
 }

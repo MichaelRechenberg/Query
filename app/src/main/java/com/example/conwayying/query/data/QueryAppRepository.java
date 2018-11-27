@@ -1,6 +1,7 @@
 package com.example.conwayying.query.data;
 
 import android.app.Application;
+import android.util.Pair;
 
 import com.example.conwayying.query.data.entity.AcademicClass;
 import com.example.conwayying.query.data.entity.AcademicClassDao;
@@ -24,6 +25,14 @@ public class QueryAppRepository {
 
     public QueryAppRepository(Application application){
         QueryAppDatabase db = QueryAppDatabase.getDatabase(application);
+        mAcademicClassDao = db.getAcademicClassDao();
+        mLectureDao = db.getLectureDao();
+        mNoteDao = db.getNoteDao();
+        mConfusionMarkDao = db.getConfusionMarkDao();
+    }
+
+    // Constructor used for testing purposes only
+    public QueryAppRepository(QueryAppDatabase db){
         mAcademicClassDao = db.getAcademicClassDao();
         mLectureDao = db.getLectureDao();
         mNoteDao = db.getNoteDao();
@@ -88,6 +97,18 @@ public class QueryAppRepository {
     }
 
     /**
+     * @param classId Id of an AcademicClass
+     * @return All of the Notes for a given Lecture
+     */
+    public List<Note> getAllNotesForClass(int classId){
+        return mNoteDao.getAllNotesOfClass(classId);
+    }
+
+    /**
+     * @param noteId Id of a Note
+     * @return The Note with the specified id
+
+    /**
      * @param noteId Id of a Note
      * @return The Note with the specified id
      */
@@ -130,6 +151,94 @@ public class QueryAppRepository {
      */
     public List<ConfusionMark> getAllConfusionMarksForLecture(int lectureId){
         return mConfusionMarkDao.getAllConfusionMarksForLecture(lectureId);
+    }
+
+    /**
+     * Returns a pair of integers representing the number of resolved (first integer) and unresolved
+     *  (second Integer) ConfusionMarks for a given AcademicClass
+     * @param classId Id for an Academic Class
+     * @return The Pair
+     */
+    public Pair<Integer, Integer> getConfusionMarkResolvedCountForClass(int classId){
+        // No streams with Java 7 :(
+        int numResolved = 0;
+        int numUnresolved = 0;
+        for (ConfusionMark c : this.getAllConfusionMarksForClass(classId)){
+            if (c.getIsResolved()){
+                numResolved++;
+            }
+            else{
+                numUnresolved++;
+            }
+        }
+
+        return new Pair<>(numResolved, numUnresolved);
+    }
+
+    /**
+     * Returns a pair of integers representing the number of resolved (first integer) and unresolved
+     *  (second Integer) ConfusionMarks for a given Lecture
+     * @param lectureId Id for a Lecture
+     * @return The Pair
+     */
+    public Pair<Integer, Integer> getConfusionMarkResolvedCountForLecture(int lectureId){
+        // No streams with Java 7 :(
+        int numResolved = 0;
+        int numUnresolved = 0;
+        for (ConfusionMark c : this.getAllConfusionMarksForLecture(lectureId)){
+            if (c.getIsResolved()){
+                numResolved++;
+            }
+            else{
+                numUnresolved++;
+            }
+        }
+
+        return new Pair<>(numResolved, numUnresolved);
+    }
+
+    /**
+     * Returns a pair of integers representing the number of resolved (first integer) and unresolved
+     *  (second Integer) Notes for a given AcademicClass
+     * @param classId Id for an Academic Class
+     * @return The Pair
+     */
+    public Pair<Integer, Integer> getNoteResolvedCountForClass(int classId){
+        // No streams with Java 7 :(
+        int numResolved = 0;
+        int numUnresolved = 0;
+        for (Note note : this.getAllNotesForClass(classId)){
+            if (note.getIsResolved()){
+                numResolved++;
+            }
+            else{
+                numUnresolved++;
+            }
+        }
+
+        return new Pair<>(numResolved, numUnresolved);
+    }
+
+    /**
+     * Returns a pair of integers representing the number of resolved (first integer) and unresolved
+     *  (second Integer) Notes for a given Lecture
+     * @param lectureId Id for a Lecture
+     * @return The Pair
+     */
+    public Pair<Integer, Integer> getNoteResolvedCountForLecture(int lectureId){
+        // No streams with Java 7 :(
+        int numResolved = 0;
+        int numUnresolved = 0;
+        for (Note note : this.getAllNotesForLecture(lectureId)){
+            if (note.getIsResolved()){
+                numResolved++;
+            }
+            else{
+                numUnresolved++;
+            }
+        }
+
+        return new Pair<>(numResolved, numUnresolved);
     }
 
     /**
