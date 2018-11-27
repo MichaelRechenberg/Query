@@ -6,6 +6,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.conwayying.query.data.entity.AcademicClass;
 import com.example.conwayying.query.data.entity.AcademicClassDao;
@@ -47,7 +48,6 @@ public abstract class QueryAppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             QueryAppDatabase.class, "query_room_database")
-                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
@@ -58,7 +58,7 @@ public abstract class QueryAppDatabase extends RoomDatabase {
 
     /**
      * Instantiates the database each time
-     */
+
     private static RoomDatabase.Callback sRoomDatabaseCallback =
             new RoomDatabase.Callback(){
 
@@ -71,15 +71,15 @@ public abstract class QueryAppDatabase extends RoomDatabase {
 
     /**
      * AsyncTask to delete contents of database, then populates it
-     */
+
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
 
         private final LectureDao mDao;
         private final AcademicClassDao classDao;
 
-        PopulateDbAsync(QueryAppDatabase db) {
-            mDao = db.getLectureDao();
-            classDao = db.getAcademicClassDao();
+        PopulateDbAsync(QueryAppRepository db) {
+            mDao = db.getLecture();
+            classDao = db.getAcademicClass();
         }
 
         // insert returns a long
@@ -94,6 +94,6 @@ public abstract class QueryAppDatabase extends RoomDatabase {
 
             return null;
         }
-    }
+    }*/
 
 }

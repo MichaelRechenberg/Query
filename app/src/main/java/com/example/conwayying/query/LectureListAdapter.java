@@ -3,7 +3,6 @@ package com.example.conwayying.query;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,16 +10,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.conwayying.query.data.entity.AcademicClass;
+import com.example.conwayying.query.data.entity.Lecture;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.ClassViewHolder> {
+public class LectureListAdapter extends RecyclerView.Adapter<LectureListAdapter.LectureViewHolder> {
 
-    class ClassViewHolder extends RecyclerView.ViewHolder {
+    class LectureViewHolder extends RecyclerView.ViewHolder {
         private final TextView classItemView;
 
-        private ClassViewHolder(View itemView) {
+        private LectureViewHolder(View itemView) {
             super(itemView);
             classItemView = itemView.findViewById(R.id.textView);
             classItemView.setOnClickListener(new View.OnClickListener() {
@@ -35,19 +35,19 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Clas
     }
 
     private final LayoutInflater mInflater;
-    private List<AcademicClass> mClasses = new ArrayList<>();
+    private List<Lecture> mClasses = new ArrayList<>();
     private Context mContext;
 
 
 
-    ClassListAdapter(Context context, List<AcademicClass> list) {
+    LectureListAdapter(Context context, List<Lecture> list) {
         mInflater = LayoutInflater.from(context);
         mClasses = list;
         mContext = context;
     }
 
     @Override
-    public ClassViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+    public LectureViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item, parent, false);
 
         Log.d("OnCreateViewHolder", "Added to list");
@@ -57,21 +57,21 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Clas
                 mContext.startActivity(new Intent(mContext, LectureListActivity.class));
             }
         });
-        return new ClassViewHolder(itemView);
+        return new LectureViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(ClassViewHolder holder, int position) {
+    public void onBindViewHolder(LectureViewHolder holder, int position) {
         Log.d("Binding", "Binding view");
         if (mClasses != null) {
-            AcademicClass current = mClasses.get(position);
-            holder.classItemView.setText(current.getClassTitle());
+            Lecture current = mClasses.get(position);
+            holder.classItemView.setText(current.getLectureDate().toString());
         } else {
             holder.classItemView.setText("No Classes");
         }
     }
 
-    void setClasses(List<AcademicClass> classes) {
+    void setClasses(List<Lecture> classes) {
         mClasses = classes;
         notifyDataSetChanged();
     }
@@ -84,3 +84,4 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Clas
     }
 
 }
+
