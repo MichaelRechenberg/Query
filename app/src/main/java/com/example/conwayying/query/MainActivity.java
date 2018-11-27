@@ -1,15 +1,20 @@
 package com.example.conwayying.query;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.conwayying.query.data.QuestionsFragment;
+import com.example.conwayying.query.data.TimestampsFragment;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements QuestionsFragment.OnFragmentInteractionListener, TimestampsFragment.OnFragmentInteractionListener {
 
     private TextView mTextMessage;
 
@@ -18,17 +23,26 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment selectedFragment = null;
             switch (item.getItemId()) {
                 case R.id.navigation_questions:
-                    mTextMessage.setText(R.string.title_questions);
-                    return true;
+                    selectedFragment = QuestionsFragment.newInstance("lol", "zors");
+                    break;
                 case R.id.navigation_timestamps:
-                    mTextMessage.setText(R.string.title_timestamps);
-                    return true;
+                    selectedFragment = TimestampsFragment.newInstance("lol", "zors");
+                    break;
             }
-            return false;
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_layout, selectedFragment);
+            transaction.commit();
+            return true;
         }
+
     };
+
+    public void onFragmentInteraction(Uri uri) {
+        // do nothing
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, QuestionsFragment.newInstance("lol", "zors"));
+        transaction.commit();
     }
 
 }
