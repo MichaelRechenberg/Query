@@ -37,6 +37,17 @@ public interface NoteDao {
      */
     @Query("UPDATE Note SET note_text = :noteText WHERE note_id = :noteId")
     void setNoteText(int noteId, String noteText);
+
+    /**
+     * @param classId Id of the AcademicClass you want to retrieve all ConfusionMarks for
+     * @return The ConfusionMarks for all Lectures that associated with a specified AcademicClass
+     */
+    @Query(
+            "SELECT *" +
+            "FROM Note " +
+            "WHERE Note.lecture_id IN (SELECT Lecture.lecture_id FROM Lecture WHERE Lecture.class_id = :classId)"
+    )
+    List<Note> getAllNotesOfClass(int classId);
 }
 
 

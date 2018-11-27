@@ -18,7 +18,7 @@ import com.example.conwayying.query.data.entity.NoteDao;
  * Database for all Entities for the Query app
  */
 @Database(entities = {AcademicClass.class, Lecture.class, Note.class, ConfusionMark.class},
-    version = 5)
+    version = 6)
 public abstract class QueryAppDatabase extends RoomDatabase {
 
     public abstract AcademicClassDao getAcademicClassDao();
