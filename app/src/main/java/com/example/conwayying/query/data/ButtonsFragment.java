@@ -1,8 +1,10 @@
 package com.example.conwayying.query.data;
 
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
-import android.net.Uri;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,12 +13,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ToggleButton;
 
 import com.example.conwayying.query.R;
 import com.example.conwayying.query.data.entity.ConfusionMark;
+import com.example.conwayying.query.data.entity.Note;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -29,11 +34,12 @@ public class ButtonsFragment extends Fragment {
     private String mParam2;
 
     private QueryAppRepository queryAppRepository;
-    private GetLectureIdInterface mListener;
+    private GetSlideNumberInterface mListener;
 
     private ImageButton mWTFButton;
     // TODO: do the other ImageButtons
     private ToggleButton mConfToggleButton;
+    private ImageButton mNoteButton;
 
 
     // Fragment state
@@ -79,17 +85,19 @@ public class ButtonsFragment extends Fragment {
         // TODO: better ID names
         mWTFButton = (ImageButton) view.findViewById(R.id.imageButton3);
         mConfToggleButton = (ToggleButton) view.findViewById(R.id.imageButton);
+        mNoteButton = (ImageButton) view.findViewById(R.id.imageButton2);
         Bundle bundle = this.getArguments();
         int lectureId = bundle.getInt("LectureId", -1);
         initWTFButtonEventHandlers(mWTFButton, queryAppRepository, lectureId);
         initRecordIntervalButtonEventHandlers(mConfToggleButton, queryAppRepository, lectureId);
+        initQuestionButtonEventHandlers(mNoteButton, queryAppRepository, lectureId);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof GetLectureIdInterface) {
-            mListener = (GetLectureIdInterface) context;
+        if (context instanceof GetSlideNumberInterface) {
+            mListener = (GetSlideNumberInterface) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -112,8 +120,8 @@ public class ButtonsFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface GetLectureIdInterface {
-        int getLectureId();
+    public interface GetSlideNumberInterface {
+        int getSlideNumber();
     }
 
 
@@ -131,7 +139,7 @@ public class ButtonsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Date currentDateTime = Calendar.getInstance().getTime();
-                int slideNumber = bf.mListener.getLectureId();
+                int slideNumber = bf.mListener.getSlideNumber();
                 ConfusionMark confusionMark = new ConfusionMark(currentDateTime, lectureId, slideNumber);
                 ConfusionMarkAsyncTaskParams param = new ConfusionMarkAsyncTaskParams();
                 param.repo = queryAppRepository;
@@ -169,7 +177,7 @@ public class ButtonsFragment extends Fragment {
                     // Toggle was disabled
                     // Record the confusion mark and reset lastStartRecordDate
                     Date currDate = Calendar.getInstance().getTime();
-                    int slideNumber = bf.mListener.getLectureId();
+                    int slideNumber = bf.mListener.getSlideNumber();
                     ConfusionMark confusionMark = new ConfusionMark(lastStartRecordDate, lectureId, slideNumber);
                     ConfusionMarkAsyncTaskParams param = new ConfusionMarkAsyncTaskParams();
                     confusionMark.setEndDate(currDate);
@@ -183,7 +191,65 @@ public class ButtonsFragment extends Fragment {
         });
     }
 
+    /**
+     * Initialize event handlers for when the "Question" button is pressed
+     *
+     * When clicked, create an AlertDialog to enter in note text and to set isPrivate via a
+     *  checkbox
+     *
+     * @param button The button
+     * @param queryAppRepository The repository
+     * @param lectureId The lecture id to associate with any new Notes created
+     */
+    private void initQuestionButtonEventHandlers(ImageButton button,
+                                                 final QueryAppRepository queryAppRepository,
+                                                 final int lectureId){
+        final ButtonsFragment bf = this;
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Foo", "Question button clicked");
+                Log.d("Foo", "Spawning Fullscreen dialog");
 
+                View dialogViewInflated = LayoutInflater.from(getContext()).inflate(R.layout.new_note_dialog_layout, (ViewGroup) getView(), false);
+                final EditText noteText = (EditText) dialogViewInflated.findViewById(R.id.new_note_text);
+                final CheckBox isPrivateCheckbox = (CheckBox) dialogViewInflated.findViewById(R.id.new_note_is_private_checkbox);
+
+                final Dialog createQuestionDialog = new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.new_note_title_text)
+                        .setView(dialogViewInflated)
+                        .setPositiveButton(R.string.new_note_confirm_btn_text, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                int slideNumber = bf.mListener.getSlideNumber();
+                                String newNoteText = noteText.getText().toString();
+                                boolean isPrivate = isPrivateCheckbox.isChecked();
+
+                                Note note = new Note(lectureId, newNoteText, Calendar.getInstance().getTime(), slideNumber);
+                                note.setIsPrivate(isPrivate);
+
+                                NoteAsyncTaskParams param = new NoteAsyncTaskParams();
+                                param.repo = queryAppRepository;
+                                param.note = note;
+
+                                Log.d("Foo", "Firing and forgetting to insert note");
+                                new InsertNoteMarkAsyncTask().execute(param);
+                            }
+                        })
+                        .setNegativeButton(R.string.new_note_dismiss_btn_text, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Log.d("Foo", "Dismissed dialog");
+                            }
+                        })
+                        .setCancelable(true)
+                        .create();
+
+                createQuestionDialog.show();
+            }
+        });
+    }
 
     private class ConfusionMarkAsyncTaskParams {
         QueryAppRepository repo;
@@ -206,6 +272,29 @@ public class ButtonsFragment extends Fragment {
 
 
                 Log.d("DebugDB", Integer.toString(repo.getAllConfusionMarksForLecture(param.confusionMark.getLectureId()).size()));
+            }
+            return null;
+        }
+
+    }
+
+    private class NoteAsyncTaskParams {
+        QueryAppRepository repo;
+        Note note;
+    }
+
+    private static class InsertNoteMarkAsyncTask extends AsyncTask<NoteAsyncTaskParams, Void, Void> {
+        @Override
+        protected Void doInBackground(NoteAsyncTaskParams...params) {
+            for(NoteAsyncTaskParams param : params){
+                Note note = param.note;
+                QueryAppRepository repo = param.repo;
+                Long noteId = repo.insert(note);
+                Log.d("DebugDB", "Newly inserted Note has id " + noteId.toString());
+                Log.d("DebugDB", "Note text -> " + note.getNoteText());
+                Log.d("DebugDB", "Note isPrivate -> " + note.getIsPrivate());
+                Log.d("DebugDB", "Note isResolved -> " + note.getIsResolved());
+                Log.d("DebugDB", "Note lectureId -> " + note.getLectureId());
             }
             return null;
         }

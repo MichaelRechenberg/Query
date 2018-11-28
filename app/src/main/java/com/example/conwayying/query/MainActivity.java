@@ -21,7 +21,7 @@ import com.example.conwayying.query.data.TimestampsListFragment;
 
 public class MainActivity extends AppCompatActivity implements QuestionsListFragment.OnFragmentInteractionListener, TimestampsListFragment.OnFragmentInteractionListener,
         TimestampsFragment.OnFragmentInteractionListener, LectureSlidesFragment.OnFragmentInteractionListener,
-        ButtonsFragment.GetLectureIdInterface, TimestampsListFragment.TimestampClicked, QuestionsListFragment.QuestionClicked {
+        ButtonsFragment.GetSlideNumberInterface, TimestampsListFragment.TimestampClicked, QuestionsListFragment.QuestionClicked {
 
     private TextView mTextMessage;
     private QueryAppRepository queryAppRepository;
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
     }
 
     @Override
-    public int getLectureId() {
+    public int getSlideNumber() {
         LectureSlidesFragment slidesFrag = (LectureSlidesFragment) getSupportFragmentManager().findFragmentById(R.id.lecture_slides_frame_layout);
         return slidesFrag.getLectureSlideNumber();
     }
