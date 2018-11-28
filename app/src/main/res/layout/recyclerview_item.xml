@@ -8,5 +8,8 @@
         style="@style/word_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary" />
+        android:background="@android:color/darker_gray"
+        android:fontFamily="@font/oswald"
+        android:textColor="@color/colorPrimary"
+        android:textSize="30dp" />
 </LinearLayout>
