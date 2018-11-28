@@ -20,4 +20,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="wtf_button_text">WTF</string>
+    <string name="question_button_text">Question</string>
+    <string name="record_button_text">Record</string>
 </resources>
