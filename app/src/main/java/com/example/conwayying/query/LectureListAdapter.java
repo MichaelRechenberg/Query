@@ -2,12 +2,14 @@ package com.example.conwayying.query;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.conwayying.query.data.LectureDataEntry;
@@ -20,10 +22,12 @@ public class LectureListAdapter extends RecyclerView.Adapter<LectureListAdapter.
 
     class LectureViewHolder extends RecyclerView.ViewHolder {
         private final TextView classItemView;
+        private final Button indicatorView;
 
         private LectureViewHolder(View itemView) {
             super(itemView);
             classItemView = itemView.findViewById(R.id.textView);
+            indicatorView = itemView.findViewById(R.id.indicator);
         }
 
 
@@ -43,7 +47,7 @@ public class LectureListAdapter extends RecyclerView.Adapter<LectureListAdapter.
 
     @Override
     public LectureViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_itemlecture, parent, false);
 
         Log.d("OnCreateViewHolder", "Added to list");
         return new LectureViewHolder(itemView);
@@ -67,6 +71,16 @@ public class LectureListAdapter extends RecyclerView.Adapter<LectureListAdapter.
                     mContext.startActivity(new Intent(mContext, MainActivity.class).putExtra("LectureId", current.getLectureId()));
                 }
             });
+            if (confusionMarkResolvedCountPair.first + confusionMarkResolvedCountPair.second > 0) {
+                Log.d("Confusion", "" + confusionMarkResolvedCountPair.first);
+                if (confusionMarkResolvedCountPair.first / (confusionMarkResolvedCountPair.second + confusionMarkResolvedCountPair.first) > .8) {
+                    holder.indicatorView.setBackgroundColor(Color.parseColor("#006400"));
+                    //Log.d("Confusion", "here");
+                } else {
+                    holder.indicatorView.setBackgroundColor(Color.parseColor("#FF0000"));
+                    //Log.d("Confusion", "there");
+                }
+            }
         } else {
             holder.classItemView.setText("No Classes");
         }
