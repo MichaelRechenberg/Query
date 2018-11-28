@@ -61,6 +61,7 @@ public class LectureSlideContainer {
      * Redraws the slide based on the current slide number
      */
     public void redrawSlide(){
+        Log.d("LectureSlides", "Redrawing lecture slides to slide " + this.currentSlideNumber);
         InputStream inputStream = null;
 
         try {

@@ -8,11 +8,23 @@
     tools:context="com.example.conwayying.query.MainActivity">
 
     <FrameLayout
+        android:id="@+id/lecture_slides_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="151dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/frame_layout">
+
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="347dp"
         android:layout_above="@+id/navigation"
-        android:animateLayoutChanges="true">
+        android:layout_marginTop="8dp"
+        android:animateLayoutChanges="true"
+        app:layout_constraintTop_toBottomOf="@id/lecture_slides_frame_layout">
+
     </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView

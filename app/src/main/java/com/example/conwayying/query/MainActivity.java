@@ -10,13 +10,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.conwayying.query.data.LectureSlidesFragment;
 import com.example.conwayying.query.data.MyListFragment;
 import com.example.conwayying.query.data.QueryAppRepository;
 import com.example.conwayying.query.data.QuestionsFragment;
 import com.example.conwayying.query.data.TimestampsFragment;
 
 
-public class MainActivity extends AppCompatActivity implements MyListFragment.OnFragmentInteractionListener, TimestampsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements MyListFragment.OnFragmentInteractionListener,
+        TimestampsFragment.OnFragmentInteractionListener, LectureSlidesFragment.OnFragmentInteractionListener {
 
     private TextView mTextMessage;
     private QueryAppRepository queryAppRepository;
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements MyListFragment.On
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, new MyListFragment(queryAppRepository));
+        transaction.replace(R.id.lecture_slides_frame_layout, new LectureSlidesFragment());
         transaction.commit();
     }
 
