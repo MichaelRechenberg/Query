@@ -23,4 +23,7 @@ public interface AcademicClassDao {
     @Query("SELECT * FROM Academic_Class")
     List<AcademicClass> getAllClasses();
 
+    @Query("DELETE FROM Academic_Class")
+    void deleteAll();
+
 }

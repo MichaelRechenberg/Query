@@ -30,4 +30,7 @@ public interface LectureDao {
     @Query("SELECT * FROM Lecture WHERE class_id = :classId")
     List<Lecture> getAllLecturesForClass(int classId);
 
+    @Query("DELETE FROM Lecture")
+    void deleteAll();
+
 }
