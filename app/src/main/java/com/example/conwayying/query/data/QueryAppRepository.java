@@ -125,6 +125,24 @@ public class QueryAppRepository {
         mNoteDao.setNoteText(noteId, updatedText);
     }
 
+    /**
+     * Update the resolved status of a Note
+     * @param noteId The id of the Note to update
+     * @param isResolved Whether this note has been marked resolved by the user
+     */
+    public void updateIsResolved(int noteId, Boolean isResolved){
+        mNoteDao.setIsResolved(noteId, isResolved);
+    }
+
+    /**
+     * Update the resolved status of a Note
+     * @param noteId The id of the Note to update
+     * @param isPrivate Whether this note has been marked private by the user
+     */
+    public void updateIsPrivate(int noteId, Boolean isPrivate){
+        mNoteDao.setIsPrivate(noteId, isPrivate);
+    }
+
     public Long insert(Note note){
         return mNoteDao.insert(note);
     }
