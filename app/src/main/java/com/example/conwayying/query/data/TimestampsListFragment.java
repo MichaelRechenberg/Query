@@ -56,7 +56,7 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
                     + " must implement OnFragmentInteractionListener");
         }
         // TODO: Actually take in real classId
-        List<ConfusionMark> confusionMarksList = qar.getAllConfusionMarksForClass(35);
+        List<ConfusionMark> confusionMarksList = qar.getAllConfusionMarksForClass(4);
 
         // We populate the data array list
         // Each hash map in the array list represents a single row's information
@@ -74,6 +74,9 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
                 concatenatedStartEnd = sdf.format(confusionMark.getStartDate()) + " - " + sdf.format(confusionMark.getEndDate());
             }
             rowInformation.put("Confusion Mark", concatenatedStartEnd);
+            // TODO: Change hardcoded slide number to real one
+            rowInformation.put("Slide Number", "7");
+
             data.add(rowInformation);
         }
 
@@ -108,6 +111,7 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
     @Override
     public void onListItemClick(ListView list, View v, int position, long id) {
 
+        Log.d("slidenum", "" + data.get(position).get("Slide Number"));
         Toast.makeText(getActivity(),
                 getListView().getItemAtPosition(position).toString(),
                 Toast.LENGTH_LONG).show();

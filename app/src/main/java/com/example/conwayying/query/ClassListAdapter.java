@@ -3,13 +3,14 @@ package com.example.conwayying.query;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.conwayying.query.data.AcademicClassDataEntry;
 import com.example.conwayying.query.data.entity.AcademicClass;
 
 import java.util.ArrayList;
@@ -29,14 +30,14 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Clas
     }
 
     private final LayoutInflater mInflater;
-    private List<AcademicClass> mClasses = new ArrayList<>();
+    private List<AcademicClassDataEntry> mClassDataEntries = new ArrayList<>();
     private Context mContext;
 
 
 
-    ClassListAdapter(Context context, List<AcademicClass> list) {
+    ClassListAdapter(Context context, List<AcademicClassDataEntry> list) {
         mInflater = LayoutInflater.from(context);
-        mClasses = list;
+        mClassDataEntries = list;
         mContext = context;
     }
 
@@ -48,9 +49,14 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Clas
 
     @Override
     public void onBindViewHolder(ClassViewHolder holder, int position) {
-        Log.d("Binding", "Binding view");
-        if (mClasses != null) {
-            final AcademicClass current = mClasses.get(position);
+        if (mClassDataEntries != null) {
+            final AcademicClassDataEntry dataEntry = mClassDataEntries.get(position);
+            final AcademicClass current = dataEntry.academicClass;
+
+            // TODO: Heather use these for the colored indicator
+            final Pair<Integer, Integer> noteResolvedCountPair = dataEntry.noteResolvedCountPair;
+            final Pair<Integer, Integer> confusionMarkResolvedCountPair = dataEntry.confusionMarkResolvedCountPair;
+
             holder.classItemView.setText(current.getClassTitle());
             holder.classItemView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -63,15 +69,15 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Clas
         }
     }
 
-    void setClasses(List<AcademicClass> classes) {
-        mClasses = classes;
+    void setClasses(List<AcademicClassDataEntry> classes) {
+        mClassDataEntries = classes;
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        if (mClasses != null)
-            return mClasses.size();
+        if (mClassDataEntries != null)
+            return mClassDataEntries.size();
         else return 0;
     }
 
