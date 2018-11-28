@@ -4,10 +4,16 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+
+import com.example.conwayying.query.data.converters.DateConverters;
+
+import java.util.Date;
 
 import io.reactivex.annotations.NonNull;
 
 @Entity(tableName = "Note")
+@TypeConverters({DateConverters.class})
 public class Note {
 
     // Id for the note
@@ -38,15 +44,45 @@ public class Note {
     @ColumnInfo(name = "is_resolved")
     private boolean mIsResolved;
 
+    // Date when the note was first created
+    @NonNull
+    @ColumnInfo(name = "date_created")
+    private Date mDateCreated;
+
+    // The slide number for the slide deck associated with Lecture with id mLectureId
+    @NonNull
+    @ColumnInfo(name = "slide_number")
+    private int mSlideNumber;
+
+    public Date getDateCreated() {
+        return mDateCreated;
+    }
+
+    public void setDateCreated(Date mDateCreated) {
+        this.mDateCreated = mDateCreated;
+    }
+
+    public int getSlideNumber() {
+        return mSlideNumber;
+    }
+
+    public void setSlideNumber(int mSlideNumber) {
+        this.mSlideNumber = mSlideNumber;
+    }
+
     /**
      * Construct a new Note. It is automatically set to being private and unresolved
      *
      * @param lectureId The id of the Lecture this Note is associated with
      * @param noteText The actual text of the note
+     * @param dateCreated The Date this Note was created
+     * @param slideNumber The slide number that was on the screen when this Note was created
      */
-    public Note(int lectureId, String noteText){
+    public Note(int lectureId, String noteText, Date dateCreated, int slideNumber){
         this.mLectureId = lectureId;
         this.mNoteText = noteText;
+        this.mDateCreated = dateCreated;
+        this.mSlideNumber = slideNumber;
         this.mIsPrivate = true;
         this.mIsResolved = false;
     }

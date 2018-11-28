@@ -131,10 +131,12 @@ public class ClassListActivity extends Activity {
 
                     // Add some confusion marks and notes for Oct 25 lecture of CS 465
                     // 3 notes are unresolved, 1 is resolved
-                    repo.insert(new Note((int) demoLectureId, "What is 2 + 2?"));
-                    repo.insert(new Note((int) demoLectureId, "What is the meaning of life?"));
-                    repo.insert(new Note((int) demoLectureId, "TODO: Look at the definition of 'affordance'"));
-                    Note n = new Note((int) demoLectureId, "How to design for mobile?");
+                    // magic slide number of 7 for demo purposes
+                    int BOGUS_SLIDE_NUMBER = 7;
+                    repo.insert(new Note((int) demoLectureId, "What is 2 + 2?", df.parse("10-25-2018 12:34"), BOGUS_SLIDE_NUMBER));
+                    repo.insert(new Note((int) demoLectureId, "What is the meaning of life?", df.parse("10-25-2018 12:40"), BOGUS_SLIDE_NUMBER));
+                    repo.insert(new Note((int) demoLectureId, "TODO: Look at the definition of 'affordance'", df.parse("10-25-2018 12:45"), BOGUS_SLIDE_NUMBER));
+                    Note n = new Note((int) demoLectureId, "How to design for mobile?", df.parse("10-25-2018 12:46"), BOGUS_SLIDE_NUMBER);
                     n.setIsResolved(true);
                     repo.insert(n);
 
@@ -142,18 +144,18 @@ public class ClassListActivity extends Activity {
                     // 2 of which are WTF and unresolved
                     // 3 of which are intervals and are resolved
                     DateFormat cmDF = new SimpleDateFormat("MM-dd-yyyy HH:mm");
-                    repo.insert(new ConfusionMark(cmDF.parse("10-25-2018 12:30"), (int) demoLectureId));
-                    repo.insert(new ConfusionMark(cmDF.parse("10-25-2018 12:37"), (int) demoLectureId));
+                    repo.insert(new ConfusionMark(cmDF.parse("10-25-2018 12:30"), (int) demoLectureId, BOGUS_SLIDE_NUMBER));
+                    repo.insert(new ConfusionMark(cmDF.parse("10-25-2018 12:37"), (int) demoLectureId, BOGUS_SLIDE_NUMBER));
 
-                    ConfusionMark cm = new ConfusionMark(cmDF.parse("10-25-2018 12:31"), (int) demoLectureId);
+                    ConfusionMark cm = new ConfusionMark(cmDF.parse("10-25-2018 12:31"), (int) demoLectureId, BOGUS_SLIDE_NUMBER);
                     cm.setIsResolved(true);
                     repo.insert(cm);
 
-                    cm = new ConfusionMark(cmDF.parse("10-25-2018 12:37"), (int) demoLectureId);
+                    cm = new ConfusionMark(cmDF.parse("10-25-2018 12:37"), (int) demoLectureId, BOGUS_SLIDE_NUMBER);
                     cm.setIsResolved(true);
                     repo.insert(cm);
 
-                    cm = new ConfusionMark(cmDF.parse("10-25-2018 12:40"), (int) demoLectureId);
+                    cm = new ConfusionMark(cmDF.parse("10-25-2018 12:40"), (int) demoLectureId, BOGUS_SLIDE_NUMBER);
                     cm.setIsResolved(true);
                     repo.insert(cm);
 

@@ -46,6 +46,11 @@ public class ConfusionMark {
     @ColumnInfo(name = "is_resolved")
     private boolean mIsResolved;
 
+    // The slide number for the slide deck associated with Lecture with id mLectureId
+    @NonNull
+    @ColumnInfo(name = "slide_number")
+    private int mSlideNumber;
+
     /**
      * Represent a confusion mark
      *
@@ -58,11 +63,13 @@ public class ConfusionMark {
      *
      * @param startDate The start date for the confusion mark
      * @param lectureId The id of the lecture that this confusion mark was made for
+     * @param slideNumber The slide number that was present on the screen when this ConfusionMark was made
      */
-    public ConfusionMark(@NonNull Date startDate, int lectureId){
+    public ConfusionMark(@NonNull Date startDate, int lectureId, int slideNumber){
         this.mStartDate = startDate;
         this.mEndDate = null;
         this.mLectureId = lectureId;
+        this.mSlideNumber = slideNumber;
         this.mIsResolved = false;
     }
 
@@ -112,5 +119,13 @@ public class ConfusionMark {
 
     public void setIsResolved(boolean isResolved) {
         this.mIsResolved = isResolved;
+    }
+
+    public int getSlideNumber() {
+        return mSlideNumber;
+    }
+
+    public void setSlideNumber(int slideNumber) {
+        this.mSlideNumber = slideNumber;
     }
 }
