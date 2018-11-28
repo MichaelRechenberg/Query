@@ -10,10 +10,12 @@ import android.util.Log;
 import com.example.conwayying.query.data.QueryAppRepository;
 import com.example.conwayying.query.data.entity.AcademicClass;
 import com.example.conwayying.query.data.entity.AcademicClassDao;
+import com.example.conwayying.query.data.entity.ConfusionMark;
 import com.example.conwayying.query.data.entity.Lecture;
 import com.example.conwayying.query.data.entity.Note;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -62,11 +64,30 @@ public class ClassListActivity extends Activity {
             Log.d("Classes", Integer.toString(repo.getAllClasses().size()));
             AcademicClass class1 = new AcademicClass("CS 465");
             long classId = repo.insert(class1);
+            Log.d("Classes", "Class id " + String.valueOf(classId));
             Lecture lecture = new Lecture(new Date(), (int) classId);
             long lectureId = repo.insert(lecture);
             repo.insert(new Note((int) lectureId, "Conway is cool"));
             repo.insert(new Note((int) lectureId, "Mike is cool"));
             repo.insert(new Note((int) lectureId, "Heather is cool"));
+
+            // Insert confusion marks
+            Date startDate = new Date();
+            int numberOfSeconds = 30;
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+            calendar.add(Calendar.SECOND, numberOfSeconds);
+            Date endDate = calendar.getTime();
+
+            ConfusionMark confusionMark = new ConfusionMark(startDate, (int)lectureId);
+            confusionMark.setEndDate(endDate);
+            ConfusionMark confusionMarkNoEndDate = new ConfusionMark(startDate, (int)lectureId);
+
+            repo.insert(confusionMark);
+            repo.insert(confusionMarkNoEndDate);
+            for (ConfusionMark confusionMark1 : repo.getAllConfusionMarksForLecture((int)lectureId)) {
+                Log.d("Classes", confusionMark1.getStartDate().toString());
+            }
 
             return null;
         }

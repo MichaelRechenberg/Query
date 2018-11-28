@@ -36,7 +36,7 @@ import java.util.List;
  */
 // References
 // https://gist.github.com/ar-android/002d77cbd935f970ef5c
-public class MyListFragment extends android.support.v4.app.ListFragment {
+public class QuestionsListFragment extends android.support.v4.app.ListFragment {
 
     private String dataArray[];
     private ArrayList<HashMap<String, String>> data;
@@ -44,8 +44,7 @@ public class MyListFragment extends android.support.v4.app.ListFragment {
     private OnFragmentInteractionListener mListener;
     private SimpleAdapter adapter;
 
-    public MyListFragment(QueryAppRepository qar) {
-        dataArray = new String[] { "One", "Two", "Three", };
+    public QuestionsListFragment(QueryAppRepository qar) {
         data = new ArrayList<HashMap<String,String>>();
         this.qar = qar;
     }
@@ -64,10 +63,6 @@ public class MyListFragment extends android.support.v4.app.ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ListAdapter listAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, dataArray);
-        setListAdapter(listAdapter);
     }
 
 
@@ -83,16 +78,15 @@ public class MyListFragment extends android.support.v4.app.ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        // TODO: Actually take in real classId
         List<Note> notesList = qar.getAllNotesForClass(1);
-        List<String> notes = new ArrayList();
 
         // We populate the data array list
-        // Each hashmap in the array list represents a single row's information
+        // Each hash map in the array list represents a single row's information
         HashMap<String, String> rowInformation;
 
         for (Note note : notesList) {
             rowInformation = new HashMap<String, String>();
-            notes.add(note.getNoteText());
             rowInformation.put("Note Text", note.getNoteText());
             rowInformation.put("Private Status", note.getIsPrivate() ? "Private" : "Public");
             rowInformation.put("Is Resolved Status", note.getIsResolved() ? "Resolved" : "Unresolved");

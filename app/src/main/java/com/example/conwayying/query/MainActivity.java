@@ -12,12 +12,13 @@ import android.widget.TextView;
 
 import com.example.conwayying.query.data.ButtonsFragment;
 import com.example.conwayying.query.data.LectureSlidesFragment;
-import com.example.conwayying.query.data.MyListFragment;
+import com.example.conwayying.query.data.QuestionsListFragment;
 import com.example.conwayying.query.data.QueryAppRepository;
 import com.example.conwayying.query.data.TimestampsFragment;
+import com.example.conwayying.query.data.TimestampsListFragment;
 
 
-public class MainActivity extends AppCompatActivity implements MyListFragment.OnFragmentInteractionListener,
+public class MainActivity extends AppCompatActivity implements QuestionsListFragment.OnFragmentInteractionListener, TimestampsListFragment.OnFragmentInteractionListener,
         TimestampsFragment.OnFragmentInteractionListener, LectureSlidesFragment.OnFragmentInteractionListener,
         ButtonsFragment.OnFragmentInteractionListener {
 
@@ -31,15 +32,15 @@ public class MainActivity extends AppCompatActivity implements MyListFragment.On
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedFragment = null;
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            QuestionsListFragment mlf = new QuestionsListFragment(queryAppRepository);
+            TimestampsListFragment tlf = new TimestampsListFragment(queryAppRepository);
             switch (item.getItemId()) {
                 case R.id.navigation_questions:
-                    MyListFragment mlf = new MyListFragment(queryAppRepository);
                     transaction.replace(R.id.frame_layout, mlf);
                     transaction.commit();
                     break;
                 case R.id.navigation_timestamps:
-                    selectedFragment = TimestampsFragment.newInstance("lol", "zors");
-                    transaction.replace(R.id.frame_layout, selectedFragment);
+                    transaction.replace(R.id.frame_layout, tlf);
                     transaction.commit();
                     break;
             }
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements MyListFragment.On
         queryAppRepository = new QueryAppRepository(getApplication());
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, new MyListFragment(queryAppRepository));
+        transaction.replace(R.id.frame_layout, new QuestionsListFragment(queryAppRepository));
         transaction.replace(R.id.lecture_slides_frame_layout, new LectureSlidesFragment());
         transaction.replace(R.id.buttons_frame_layout, new ButtonsFragment());
         transaction.commit();
