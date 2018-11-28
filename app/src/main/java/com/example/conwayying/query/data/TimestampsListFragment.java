@@ -138,6 +138,7 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
 
         Log.d("slidenum", "" + data.get(position).get("Slide Number"));
         clickedOn(Integer.parseInt(data.get(position).get("Slide Number")));
+        //TODO: Get rid
         Toast.makeText(getActivity(),
                 getListView().getItemAtPosition(position).toString(),
                 Toast.LENGTH_LONG).show();
