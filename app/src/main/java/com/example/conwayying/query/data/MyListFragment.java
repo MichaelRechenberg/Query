@@ -16,12 +16,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.app.ListFragment;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.example.conwayying.query.R;
 import com.example.conwayying.query.data.entity.Note;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -37,11 +39,14 @@ import java.util.List;
 public class MyListFragment extends android.support.v4.app.ListFragment {
 
     private String dataArray[];
+    private ArrayList<HashMap<String, String>> data;
     private QueryAppRepository qar;
     private OnFragmentInteractionListener mListener;
+    private SimpleAdapter adapter;
 
     public MyListFragment(QueryAppRepository qar) {
         dataArray = new String[] { "One", "Two", "Three", };
+        data = new ArrayList<HashMap<String,String>>();
         this.qar = qar;
     }
 
@@ -69,6 +74,8 @@ public class MyListFragment extends android.support.v4.app.ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         return inflater
                 .inflate(R.layout.simple_list_fragment, container, false);
     }
@@ -78,20 +85,25 @@ public class MyListFragment extends android.support.v4.app.ListFragment {
         super.onActivityCreated(savedInstanceState);
         List<Note> notesList = qar.getAllNotesForClass(1);
         List<String> notes = new ArrayList();
+
+        // We populate the data array list
+        // Each hashmap in the array list represents a single row's information
+        HashMap<String, String> rowInformation;
+
         for (Note note : notesList) {
+            rowInformation = new HashMap<String, String>();
             notes.add(note.getNoteText());
+            rowInformation.put("Note Text", note.getNoteText());
+            rowInformation.put("Private Status", note.getIsPrivate() ? "Private" : "Public");
+            rowInformation.put("Is Resolved Status", note.getIsResolved() ? "Resolved" : "Unresolved");
+            data.add(rowInformation);
         }
-        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, notes);
+
+        String[] from = {"Note Text", "Private Status", "Is Resolved Status"};
+
+        int[] to = {R.id.firstLine, R.id.secondLine, R.id.thirdLine};
+
+        adapter = new SimpleAdapter(getActivity(), data, R.layout.question_fragment_list_item, from, to);
         setListAdapter(adapter);
     }
 
