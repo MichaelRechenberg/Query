@@ -41,14 +41,13 @@ public class ClassListActivity extends Activity {
 
         // Set the adapter for the RecyclerView in an AsyncTask that queries the DB
         GetClassesParams getClassesParams = new GetClassesParams();
-        getClassesParams.context = this;
         getClassesParams.repo = repo;
-        getClassesParams.recyclerView = recyclerView;
-        new GetAcademicClassDataEntryAsyncTask().execute(getClassesParams);
+        new GetAcademicClassDataEntryAsyncTask(this, recyclerView).execute(getClassesParams);
     }
 
     // TODO: if no classes exist, insert all our mock data (questions, notes, etc.)
     private static class PopulateDataInitiallyAsyncTask extends AsyncTask<QueryAppRepository, Void, Void> {
+
 
         @Override
         protected Void doInBackground(final QueryAppRepository... params) {
@@ -178,23 +177,26 @@ public class ClassListActivity extends Activity {
     public class GetClassesParams {
         // The repo to use to query for data
         public QueryAppRepository repo;
-        // The RecyclerView to set the adapter for
-        public RecyclerView recyclerView;
-        // Context to use for instantiating the QueryAppRepository
-        public Context context;
     }
 
     // Populates the List of AcademicClassDataEntry objects for the ClassListAdapter and sets
     //  the adapter for the RecyclerView
     // Uses first GetClassParams to get repo, recycler view, and context
-    private static class GetAcademicClassDataEntryAsyncTask extends AsyncTask<GetClassesParams, Void, Void> {
+    private static class GetAcademicClassDataEntryAsyncTask extends AsyncTask<GetClassesParams, Void, List<AcademicClassDataEntry>> {
+
+        private Context context;
+        private RecyclerView recyclerView;
+
+        public GetAcademicClassDataEntryAsyncTask(Context context, RecyclerView recyclerView){
+            this.context = context;
+            this.recyclerView = recyclerView;
+        }
+
         @Override
-        protected Void doInBackground(GetClassesParams... getClassesParams) {
+        protected List<AcademicClassDataEntry> doInBackground(GetClassesParams... getClassesParams) {
             Log.d("Foo", "Getting all AcademicClasses and resolved counts");
 
             QueryAppRepository repo = getClassesParams[0].repo;
-            RecyclerView recyclerView = getClassesParams[0].recyclerView;
-            Context context = getClassesParams[0].context;
             List<AcademicClass> academicClasses = repo.getAllClasses();
 
             // No Streams in Java 7 -> Sad Mike
@@ -216,9 +218,15 @@ public class ClassListActivity extends Activity {
             }
 
 
-            ClassListAdapter classListAdapter = new ClassListAdapter(context, academicClassDataEntries);
-            recyclerView.setAdapter(classListAdapter);
-            return null;
+            return academicClassDataEntries;
+        }
+
+        @Override
+        protected void onPostExecute(List<AcademicClassDataEntry> academicClassDataEntries) {
+            super.onPostExecute(academicClassDataEntries);
+
+            ClassListAdapter classListAdapter = new ClassListAdapter(this.context, academicClassDataEntries);
+            this.recyclerView.setAdapter(classListAdapter);
         }
     }
 }

@@ -33,13 +33,10 @@ public class LectureListActivity extends Activity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Set adapter based on data from DB
-        Log.d("Foo", "REEEE");
         GetLecturesParams param = new GetLecturesParams();
         param.classId = classId;
-        param.context = this;
         param.repo = repo;
-        param.recyclerView = recyclerView;
-        new GetLectureDataEntryAsyncTask().execute(param);
+        new GetLectureDataEntryAsyncTask(this, recyclerView).execute(param);
 
     }
 
@@ -57,13 +54,20 @@ public class LectureListActivity extends Activity {
     // Populates the List of LectureDataEntry objects for the LectureListAdapter and sets
     //  the adapter for the RecyclerView
     // Uses first GetLecturesParams to get repo, recycler view, context, and class id
-    private static class GetLectureDataEntryAsyncTask extends AsyncTask<GetLecturesParams, Void, Void> {
+    private static class GetLectureDataEntryAsyncTask extends AsyncTask<GetLecturesParams, Void, List<LectureDataEntry>> {
+
+        private Context context;
+        private RecyclerView recyclerView;
+
+        public GetLectureDataEntryAsyncTask(Context context, RecyclerView recyclerView){
+            this.context = context;
+            this.recyclerView = recyclerView;
+        }
+
         @Override
-        protected Void doInBackground(GetLecturesParams...params) {
+        protected List<LectureDataEntry> doInBackground(GetLecturesParams...params) {
 
             QueryAppRepository repo = params[0].repo;
-            RecyclerView recyclerView = params[0].recyclerView;
-            Context context = params[0].context;
             int classId = params[0].classId;
             Log.d("Foo", "Getting all Lectures and resolved counts for class with id " + classId);
 
@@ -88,9 +92,16 @@ public class LectureListActivity extends Activity {
             }
 
 
-            LectureListAdapter lectureListAdapter = new LectureListAdapter(context, lectureDataEntries);
-            recyclerView.setAdapter(lectureListAdapter);
-            return null;
+            return lectureDataEntries;
+        }
+
+        @Override
+        protected void onPostExecute(List<LectureDataEntry> lectureDataEntries) {
+            super.onPostExecute(lectureDataEntries);
+
+            LectureListAdapter lectureListAdapter = new LectureListAdapter(this.context, lectureDataEntries);
+            this.recyclerView.setAdapter(lectureListAdapter);
+
         }
     }
 }
