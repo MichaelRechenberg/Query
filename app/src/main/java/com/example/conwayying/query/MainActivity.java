@@ -19,7 +19,7 @@ import com.example.conwayying.query.data.TimestampsFragment;
 
 public class MainActivity extends AppCompatActivity implements MyListFragment.OnFragmentInteractionListener,
         TimestampsFragment.OnFragmentInteractionListener, LectureSlidesFragment.OnFragmentInteractionListener,
-        ButtonsFragment.OnFragmentInteractionListener {
+        ButtonsFragment.OnFragmentInteractionListener, TimestampsFragment.TimestampClicked {
 
     private TextView mTextMessage;
     private QueryAppRepository queryAppRepository;
@@ -50,6 +50,13 @@ public class MainActivity extends AppCompatActivity implements MyListFragment.On
 
     public void onFragmentInteraction(Uri uri) {
         // do nothing
+    }
+
+    @Override
+    public void sendSlideNumber(int slideNumber) {
+        // Get Fragment with slides to do update
+        LectureSlidesFragment slidesFrag = (LectureSlidesFragment) getSupportFragmentManager().findFragmentById(R.id.lecture_slides_frame_layout);
+        slidesFrag.setAndRedrawSlideNumber(slideNumber);
     }
 
     @Override

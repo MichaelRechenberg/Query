@@ -51,6 +51,11 @@ public class LectureSlidesFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public void setAndRedrawSlideNumber(int slideNumber) {
+        this.lectureSlideContainer.setSlideNumber(slideNumber);
+        this.lectureSlideContainer.redrawSlide();
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
