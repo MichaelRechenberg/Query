@@ -56,6 +56,10 @@ public class LectureSlidesFragment extends Fragment {
         this.lectureSlideContainer.redrawSlide();
     }
 
+    public int getLectureSlideNumber(){
+        return this.lectureSlideContainer.getCurrentSlideNumber();
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.

@@ -43,11 +43,29 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
 
     private TimestampClicked mCallback;
 
+    public TimestampsListFragment (){
+        // required empty constructor
+    }
 
     public TimestampsListFragment(QueryAppRepository qar) {
         data = new ArrayList<HashMap<String,String>>();
         this.qar = qar;
     }
+
+    /**
+     * Factory method to make a new TimestampsListFragment, specifying lecture id
+     * @param qar
+     * @param lectureId
+     * @return
+     */
+    public static TimestampsListFragment newInstance(QueryAppRepository qar, int lectureId){
+        TimestampsListFragment tlf = new TimestampsListFragment(qar);
+        Bundle args = new Bundle();
+        args.putInt("LectureId", lectureId);
+        tlf.setArguments(args);
+        return tlf;
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -55,41 +73,11 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
         mCallback = (TimestampClicked) context;
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
         }
-        // TODO: Actually take in real lectureID
-        List<ConfusionMark> confusionMarksList = qar.getAllConfusionMarksForClass(1);
-
-        // We populate the data array list
-        // Each hash map in the array list represents a single row's information
-        HashMap<String, String> rowInformation;
-
-        for (ConfusionMark confusionMark : confusionMarksList) {
-            rowInformation = new HashMap<String, String>();
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-            String concatenatedStartEnd;
-            if (confusionMark.getEndDate() == null) {
-                concatenatedStartEnd = sdf.format(confusionMark.getStartDate());
-                Log.d("lol", "falling");
-            }
-            else {
-                concatenatedStartEnd = sdf.format(confusionMark.getStartDate()) + " - " + sdf.format(confusionMark.getEndDate());
-            }
-            rowInformation.put("Confusion Mark", concatenatedStartEnd);
-            // TODO: Change hardcoded slide number to real one
-            rowInformation.put("Slide Number", Integer.toString(confusionMark.getSlideNumber()));
-
-            data.add(rowInformation);
+        else {
+                throw new RuntimeException(context.toString()
+                        + " must implement OnFragmentInteractionListener");
         }
-
-        String[] from = {"Confusion Mark"};
-
-        int[] to = {R.id.confusionMarkText};
-
-        adapter = new SimpleAdapter(getActivity(), data, R.layout.timestamps_fragment_list_item, from, to);
-        setListAdapter(adapter);
     }
 
     @Override
@@ -110,6 +98,39 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        int lectureId = this.getArguments().getInt("LectureId", -1);
+        List<ConfusionMark> confusionMarksList = qar.getAllConfusionMarksForLecture(lectureId);
+
+        // We populate the data array list
+        // Each hash map in the array list represents a single row's information
+        HashMap<String, String> rowInformation;
+        // Clear data
+        data = new ArrayList<>();
+
+        for (ConfusionMark confusionMark : confusionMarksList) {
+            rowInformation = new HashMap<String, String>();
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            String concatenatedStartEnd;
+            if (confusionMark.getEndDate() == null) {
+                concatenatedStartEnd = sdf.format(confusionMark.getStartDate());
+                Log.d("lol", "falling");
+            }
+            else {
+                concatenatedStartEnd = sdf.format(confusionMark.getStartDate()) + " - " + sdf.format(confusionMark.getEndDate());
+            }
+            rowInformation.put("Confusion Mark", concatenatedStartEnd);
+            rowInformation.put("Slide Number", Integer.toString(confusionMark.getSlideNumber()));
+
+            data.add(rowInformation);
+        }
+
+        String[] from = {"Confusion Mark"};
+
+        int[] to = {R.id.confusionMarkText};
+
+        adapter = new SimpleAdapter(getActivity(), data, R.layout.timestamps_fragment_list_item, from, to);
+        setListAdapter(adapter);
     }
 
     @Override

@@ -21,7 +21,7 @@ import com.example.conwayying.query.data.TimestampsListFragment;
 
 public class MainActivity extends AppCompatActivity implements QuestionsListFragment.OnFragmentInteractionListener, TimestampsListFragment.OnFragmentInteractionListener,
         TimestampsFragment.OnFragmentInteractionListener, LectureSlidesFragment.OnFragmentInteractionListener,
-        ButtonsFragment.OnFragmentInteractionListener, TimestampsListFragment.TimestampClicked {
+        ButtonsFragment.GetLectureIdInterface, TimestampsListFragment.TimestampClicked, QuestionsListFragment.QuestionClicked {
 
     private TextView mTextMessage;
     private QueryAppRepository queryAppRepository;
@@ -33,8 +33,9 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedFragment = null;
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            QuestionsListFragment mlf = new QuestionsListFragment(queryAppRepository);
-            TimestampsListFragment tlf = new TimestampsListFragment(queryAppRepository);
+            int lectureId = getIntent().getIntExtra("LectureId", -1);
+            QuestionsListFragment mlf = QuestionsListFragment.newInstance(queryAppRepository, lectureId);
+            TimestampsListFragment tlf = TimestampsListFragment.newInstance(queryAppRepository, lectureId);
             switch (item.getItemId()) {
                 case R.id.navigation_questions:
                     transaction.replace(R.id.frame_layout, mlf);
@@ -63,6 +64,12 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
     }
 
     @Override
+    public int getLectureId() {
+        LectureSlidesFragment slidesFrag = (LectureSlidesFragment) getSupportFragmentManager().findFragmentById(R.id.lecture_slides_frame_layout);
+        return slidesFrag.getLectureSlideNumber();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -76,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
         int lectureId = getIntent().getIntExtra("LectureId", -1);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, new QuestionsListFragment(queryAppRepository));
+        transaction.replace(R.id.frame_layout, TimestampsListFragment.newInstance(queryAppRepository, lectureId));
         transaction.replace(R.id.lecture_slides_frame_layout, new LectureSlidesFragment());
         transaction.replace(R.id.buttons_frame_layout, ButtonsFragment.newInstance(lectureId));
         transaction.commit();

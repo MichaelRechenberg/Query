@@ -46,7 +46,7 @@ public class LectureSlideContainer {
      * @return The current slide number
      */
     public int getCurrentSlideNumber(){
-        return this.getCurrentSlideNumber();
+        return this.currentSlideNumber;
     }
 
     /**
@@ -58,7 +58,7 @@ public class LectureSlideContainer {
     }
 
     /**
-     * Redraws the slide based on the current slide number
+     * Redraws the slide based on the current slide number, updates seek bar
      */
     public void redrawSlide(){
         Log.d("LectureSlides", "Redrawing lecture slides to slide " + this.currentSlideNumber);
@@ -70,6 +70,8 @@ public class LectureSlideContainer {
             Drawable slideDrawable = Drawable.createFromStream(inputStream, null);
             this.mImageView.setImageDrawable(slideDrawable);
             inputStream.close();
+
+            mSeekBar.setProgress(this.currentSlideNumber);
 
         } catch (IOException ex){
             Log.e("LectureSlides","Could not find slide file " + ex.toString());

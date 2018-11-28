@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ToggleButton;
@@ -30,7 +29,7 @@ public class ButtonsFragment extends Fragment {
     private String mParam2;
 
     private QueryAppRepository queryAppRepository;
-    private OnFragmentInteractionListener mListener;
+    private GetLectureIdInterface mListener;
 
     private ImageButton mWTFButton;
     // TODO: do the other ImageButtons
@@ -86,18 +85,11 @@ public class ButtonsFragment extends Fragment {
         initRecordIntervalButtonEventHandlers(mConfToggleButton, queryAppRepository, lectureId);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof GetLectureIdInterface) {
+            mListener = (GetLectureIdInterface) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -120,9 +112,8 @@ public class ButtonsFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public interface GetLectureIdInterface {
+        int getLectureId();
     }
 
 
@@ -135,11 +126,13 @@ public class ButtonsFragment extends Fragment {
     private void initWTFButtonEventHandlers(final ImageButton button,
                                             final QueryAppRepository queryAppRepository,
                                             final int lectureId){
+        final ButtonsFragment bf = this;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Date currentDateTime = Calendar.getInstance().getTime();
-                ConfusionMark confusionMark = new ConfusionMark(currentDateTime, lectureId);
+                int slideNumber = bf.mListener.getLectureId();
+                ConfusionMark confusionMark = new ConfusionMark(currentDateTime, lectureId, slideNumber);
                 ConfusionMarkAsyncTaskParams param = new ConfusionMarkAsyncTaskParams();
                 param.repo = queryAppRepository;
                 param.confusionMark = confusionMark;
@@ -163,6 +156,7 @@ public class ButtonsFragment extends Fragment {
     private void initRecordIntervalButtonEventHandlers(ToggleButton button,
                                                        final QueryAppRepository queryAppRepository,
                                                        final int lectureId){
+        final ButtonsFragment bf = this;
         button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -175,10 +169,11 @@ public class ButtonsFragment extends Fragment {
                     // Toggle was disabled
                     // Record the confusion mark and reset lastStartRecordDate
                     Date currDate = Calendar.getInstance().getTime();
-                    ConfusionMark confusionMark = new ConfusionMark(lastStartRecordDate, lectureId);
+                    int slideNumber = bf.mListener.getLectureId();
+                    ConfusionMark confusionMark = new ConfusionMark(lastStartRecordDate, lectureId, slideNumber);
+                    ConfusionMarkAsyncTaskParams param = new ConfusionMarkAsyncTaskParams();
                     confusionMark.setEndDate(currDate);
                     lastStartRecordDate = null;
-                    ConfusionMarkAsyncTaskParams param = new ConfusionMarkAsyncTaskParams();
                     param.repo = queryAppRepository;
                     param.confusionMark = confusionMark;
                     Log.d("DebugDB", "Firing and forgetting interval ConfusionMark");
@@ -204,6 +199,7 @@ public class ButtonsFragment extends Fragment {
                 Date endDate = confusionMark.getEndDate();
                 Log.d("DebugDB", "Inserting ConfusionMark with start date " + confusionMark.getStartDate().toString() +
                         " and end date " + ((endDate != null) ? endDate.toString() : "NULL") +
+                        " and slide number " + confusionMark.getSlideNumber() +
                         " and lecture id " + confusionMark.getLectureId());
                 Long confusionMarkId = repo.insert(confusionMark);
                 Log.d("DebugDB", "Newly inserted ConfusionMark has id " + confusionMarkId.toString());
