@@ -29,6 +29,7 @@ public class TimestampsFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private TimestampClicked mCallback;
 
     public TimestampsFragment() {
         // Required empty public constructor
@@ -78,6 +79,7 @@ public class TimestampsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mCallback = (TimestampClicked) context;
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
@@ -90,6 +92,14 @@ public class TimestampsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public interface TimestampClicked {
+        void sendSlideNumber(int slideNumber);
+    }
+
+    public void clickedOn(int slide) {
+        mCallback.sendSlideNumber(slide);
     }
 
     /**
