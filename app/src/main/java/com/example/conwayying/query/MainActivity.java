@@ -63,10 +63,12 @@ public class MainActivity extends AppCompatActivity implements MyListFragment.On
 
         queryAppRepository = new QueryAppRepository(getApplication());
 
+        int lectureId = getIntent().getIntExtra("LectureId", -1);
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, new MyListFragment(queryAppRepository));
         transaction.replace(R.id.lecture_slides_frame_layout, new LectureSlidesFragment());
-        transaction.replace(R.id.buttons_frame_layout, new ButtonsFragment());
+        transaction.replace(R.id.buttons_frame_layout, ButtonsFragment.newInstance(lectureId));
         transaction.commit();
     }
 

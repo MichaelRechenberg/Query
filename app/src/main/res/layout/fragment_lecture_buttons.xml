@@ -24,7 +24,7 @@
                 android:layout_weight="0"
                 android:orientation="vertical">
 
-                <ImageButton
+                <ToggleButton
                     android:id="@+id/imageButton"
                     android:layout_width="75dp"
                     android:layout_height="68dp"
@@ -32,6 +32,8 @@
                     android:layout_marginLeft="15dp"
                     android:layout_weight="0"
                     android:scaleType="fitCenter"
+                    android:textOn="ON"
+                    android:textOff="OFF"
                     app:srcCompat="@android:drawable/presence_video_online" />
 
                 <TextView
