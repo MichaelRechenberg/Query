@@ -19,6 +19,15 @@
         android:textSize="45sp"
         />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="23sp"
+        android:fontFamily="@font/oswald"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="Pick a Class"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"

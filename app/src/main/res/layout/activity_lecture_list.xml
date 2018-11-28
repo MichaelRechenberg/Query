@@ -7,11 +7,19 @@
     android:orientation="vertical"
     tools:context=".ClassListActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:fontFamily="@font/oswald"
+        android:text="Pick a Lecture"
+        android:layout_marginStart="10dp"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@android:color/white"
         tools:listitem="@layout/recyclerview_item" />
 
