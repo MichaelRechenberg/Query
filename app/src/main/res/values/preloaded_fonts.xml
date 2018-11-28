@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
-        <item>@font/archivo_narrow</item>
-        <item>@font/benchnine_light</item>
-        <item>@font/donegal_one</item>
-        <item>@font/kadwa</item>
         <item>@font/oswald</item>
-        <item>@font/roboto_thin</item>
-        <item>@font/titillium_web</item>
     </array>
 </resources>

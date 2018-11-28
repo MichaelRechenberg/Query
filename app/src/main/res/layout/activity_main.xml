@@ -7,23 +7,40 @@
     android:layout_height="match_parent"
     tools:context="com.example.conwayying.query.MainActivity">
 
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/title_questions"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <FrameLayout
+        android:id="@+id/lecture_slides_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="287dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttons_frame_layout">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/buttons_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="97dp"
+        app:layout_constraintBottom_toTopOf="@+id/frame_layout">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:layout_above="@+id/navigation"
+        android:layout_marginTop="8dp"
+        android:animateLayoutChanges="true"
+        app:layout_constraintTop_toBottomOf="@id/buttons_frame_layout">
+
+    </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
         android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
         android:background="?android:attr/windowBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

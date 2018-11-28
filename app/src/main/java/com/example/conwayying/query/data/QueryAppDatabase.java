@@ -47,7 +47,8 @@ public abstract class QueryAppDatabase extends RoomDatabase {
             synchronized (QueryAppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            QueryAppDatabase.class, "query_room_database")
+                            // TODO: Might need to remove allowMainThreadQueries for performance reasons
+                            QueryAppDatabase.class, "query_room_database").allowMainThreadQueries()
                             .build();
                 }
             }
