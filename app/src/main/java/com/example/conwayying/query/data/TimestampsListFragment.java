@@ -41,6 +41,9 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
     private OnFragmentInteractionListener mListener;
     private SimpleAdapter adapter;
 
+    private TimestampClicked mCallback;
+
+
     public TimestampsListFragment(QueryAppRepository qar) {
         data = new ArrayList<HashMap<String,String>>();
         this.qar = qar;
@@ -49,14 +52,15 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mCallback = (TimestampClicked) context;
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-        // TODO: Actually take in real classId
-        List<ConfusionMark> confusionMarksList = qar.getAllConfusionMarksForClass(4);
+        // TODO: Actually take in real lectureID
+        List<ConfusionMark> confusionMarksList = qar.getAllConfusionMarksForClass(1);
 
         // We populate the data array list
         // Each hash map in the array list represents a single row's information
@@ -75,7 +79,7 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
             }
             rowInformation.put("Confusion Mark", concatenatedStartEnd);
             // TODO: Change hardcoded slide number to real one
-            rowInformation.put("Slide Number", "7");
+            rowInformation.put("Slide Number", Integer.toString(confusionMark.getSlideNumber()));
 
             data.add(rowInformation);
         }
@@ -112,9 +116,18 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
     public void onListItemClick(ListView list, View v, int position, long id) {
 
         Log.d("slidenum", "" + data.get(position).get("Slide Number"));
+        clickedOn(Integer.parseInt(data.get(position).get("Slide Number")));
         Toast.makeText(getActivity(),
                 getListView().getItemAtPosition(position).toString(),
                 Toast.LENGTH_LONG).show();
+    }
+
+    public interface TimestampClicked {
+        void sendSlideNumber(int slideNumber);
+    }
+
+    public void clickedOn(int slide) {
+        mCallback.sendSlideNumber(slide);
     }
 
     public interface OnFragmentInteractionListener {

@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -20,7 +21,7 @@ import com.example.conwayying.query.data.TimestampsListFragment;
 
 public class MainActivity extends AppCompatActivity implements QuestionsListFragment.OnFragmentInteractionListener, TimestampsListFragment.OnFragmentInteractionListener,
         TimestampsFragment.OnFragmentInteractionListener, LectureSlidesFragment.OnFragmentInteractionListener,
-        ButtonsFragment.OnFragmentInteractionListener, TimestampsFragment.TimestampClicked {
+        ButtonsFragment.OnFragmentInteractionListener, TimestampsListFragment.TimestampClicked {
 
     private TextView mTextMessage;
     private QueryAppRepository queryAppRepository;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
     @Override
     public void sendSlideNumber(int slideNumber) {
         // Get Fragment with slides to do update
+        Log.d("sendingSlides", "See here");
         LectureSlidesFragment slidesFrag = (LectureSlidesFragment) getSupportFragmentManager().findFragmentById(R.id.lecture_slides_frame_layout);
         slidesFrag.setAndRedrawSlideNumber(slideNumber);
     }
