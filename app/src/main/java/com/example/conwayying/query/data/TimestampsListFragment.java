@@ -1,5 +1,6 @@
 package com.example.conwayying.query.data;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
 import android.net.Uri;
@@ -146,6 +147,38 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
         Log.d("isResolved: ", "" + data.get(position).get("isResolved"));
         qar.updateConfusionIsResolved(Integer.parseInt(data.get(position).get("id")), !Boolean.parseBoolean(data.get(position).get("isResolved")));
 
+        // Refreshes the fragment stuff
+        Log.d("Refreshing Timestamps", "Let's go");
+        String[] from = {"Confusion Mark", "Is Resolved Status"};
+        int[] to = {R.id.confusionMarkText, R.id.thirdLine};
+
+        int lectureId = this.getArguments().getInt("LectureId", -1);
+        List<ConfusionMark> confusionMarksList = qar.getAllConfusionMarksForLecture(lectureId);
+
+        HashMap<String, String> rowInformation;
+
+        data.clear();
+
+        for (ConfusionMark confusionMark : confusionMarksList) {
+            rowInformation = new HashMap<String, String>();
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            String concatenatedStartEnd;
+            if (confusionMark.getEndDate() == null) {
+                concatenatedStartEnd = sdf.format(confusionMark.getStartDate());
+                Log.d("lol", "falling");
+            }
+            else {
+                concatenatedStartEnd = sdf.format(confusionMark.getStartDate()) + " - " + sdf.format(confusionMark.getEndDate());
+            }
+            rowInformation.put("Confusion Mark", concatenatedStartEnd);
+            rowInformation.put("Slide Number", Integer.toString(confusionMark.getSlideNumber()));
+            rowInformation.put("Is Resolved Status", confusionMark.getIsResolved() ? "Resolved" : "Unresolved");
+            rowInformation.put("isResolved", String.valueOf(confusionMark.getIsResolved()));
+            rowInformation.put("id", Integer.toString(confusionMark.getConfusionId()));
+
+            data.add(rowInformation);
+        }
+        adapter.notifyDataSetChanged();
     }
 
     public interface TimestampClicked {
