@@ -157,6 +157,7 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
 
         HashMap<String, String> rowInformation;
 
+        // Need this to keep same reference
         data.clear();
 
         for (ConfusionMark confusionMark : confusionMarksList) {
