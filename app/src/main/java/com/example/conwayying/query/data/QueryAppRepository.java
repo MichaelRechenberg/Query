@@ -1,6 +1,7 @@
 package com.example.conwayying.query.data;
 
 import android.app.Application;
+import android.util.Log;
 import android.util.Pair;
 
 import com.example.conwayying.query.data.entity.AcademicClass;
@@ -130,8 +131,15 @@ public class QueryAppRepository {
      * @param noteId The id of the Note to update
      * @param isResolved Whether this note has been marked resolved by the user
      */
-    public void updateIsResolved(int noteId, Boolean isResolved){
+    public void updateNoteIsResolved(int noteId, Boolean isResolved){
         mNoteDao.setIsResolved(noteId, isResolved);
+        Log.d("Updating isResolved", "" + Boolean.toString(isResolved) + " NoteID: " + noteId);
+    }
+
+    public void updateConfusionIsResolved(int confusionId, Boolean isResolved) {
+        mConfusionMarkDao.setIsResolved(confusionId, isResolved);
+        Log.d("Updating isResolved", "" + Boolean.toString(isResolved) + " NoteID: " + confusionId);
+
     }
 
     /**

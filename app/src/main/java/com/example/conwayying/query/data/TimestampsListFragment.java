@@ -121,13 +121,16 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
             }
             rowInformation.put("Confusion Mark", concatenatedStartEnd);
             rowInformation.put("Slide Number", Integer.toString(confusionMark.getSlideNumber()));
+            rowInformation.put("Is Resolved Status", confusionMark.getIsResolved() ? "Resolved" : "Unresolved");
+            rowInformation.put("isResolved", String.valueOf(confusionMark.getIsResolved()));
+            rowInformation.put("id", Integer.toString(confusionMark.getConfusionId()));
 
             data.add(rowInformation);
         }
 
-        String[] from = {"Confusion Mark"};
+        String[] from = {"Confusion Mark", "Is Resolved Status"};
 
-        int[] to = {R.id.confusionMarkText};
+        int[] to = {R.id.confusionMarkText, R.id.thirdLine};
 
         adapter = new SimpleAdapter(getActivity(), data, R.layout.timestamps_fragment_list_item, from, to);
         setListAdapter(adapter);
@@ -138,10 +141,11 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
 
         Log.d("slidenum", "" + data.get(position).get("Slide Number"));
         clickedOn(Integer.parseInt(data.get(position).get("Slide Number")));
-        //TODO: Get rid
-        Toast.makeText(getActivity(),
-                getListView().getItemAtPosition(position).toString(),
-                Toast.LENGTH_LONG).show();
+
+        // Updating the database
+        Log.d("isResolved: ", "" + data.get(position).get("isResolved"));
+        qar.updateConfusionIsResolved(Integer.parseInt(data.get(position).get("id")), !Boolean.parseBoolean(data.get(position).get("isResolved")));
+
     }
 
     public interface TimestampClicked {

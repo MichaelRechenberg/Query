@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,6 +107,7 @@ public class QuestionsListFragment extends android.support.v4.app.ListFragment {
             rowInformation.put("Private Status", note.getIsPrivate() ? "Private" : "Public");
             rowInformation.put("Is Resolved Status", note.getIsResolved() ? "Resolved" : "Unresolved");
             rowInformation.put("Slide Number", Integer.toString(note.getSlideNumber()));
+            rowInformation.put("id", Integer.toString(note.getNoteId()));
             data.add(rowInformation);
         }
 
@@ -120,6 +122,15 @@ public class QuestionsListFragment extends android.support.v4.app.ListFragment {
     @Override
     public void onListItemClick(ListView list, View v, int position, long id) {
         clickedOn(Integer.parseInt(data.get(position).get("Slide Number")));
+
+        // Updating the database
+        Log.d("isResolved: ", "" + data.get(position).get("Is Resolved Status"));
+        if (data.get(position).get("Is Resolved Status").equals("Resolved")) {
+            qar.updateNoteIsResolved(Integer.parseInt(data.get(position).get("id")), false);
+        } else {
+            qar.updateNoteIsResolved(Integer.parseInt(data.get(position).get("id")), true);
+        }
+
         Toast.makeText(getActivity(),
                 getListView().getItemAtPosition(position).toString(),
                 Toast.LENGTH_LONG).show();
