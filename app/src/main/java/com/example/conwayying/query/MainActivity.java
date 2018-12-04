@@ -80,6 +80,18 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // If this activity is created while in landscape mode, switch activities to the
+        //  landscape in-lecture activity at starting slide 1 instead, and .finish() this activity
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            Intent intent = new Intent(getApplicationContext(), LandscapeInLectureActivity.class);
+            intent.putExtra("LectureId", getIntent().getIntExtra("LectureId", -1));
+            intent.putExtra("SlideNumber", 1);
+            startActivity(intent);
+
+            // Close this activity
+            this.finish();
+        }
+
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
