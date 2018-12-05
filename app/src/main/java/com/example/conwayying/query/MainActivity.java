@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
 
     private TextView mTextMessage;
     private QueryAppRepository queryAppRepository;
+    private ActionBar actionBar;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -74,6 +76,11 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Added actionBar stuff
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -87,6 +94,16 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
         transaction.replace(R.id.lecture_slides_frame_layout, new LectureSlidesFragment());
         transaction.replace(R.id.buttons_frame_layout, ButtonsFragment.newInstance(lectureId));
         transaction.commit();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        //code it to launch an intent to the activity you want
+        //Intent intent = new Intent(getApplicationContext(), ClassListActivity.class);
+        //getApplicationContext().startActivity(intent);
+        onBackPressed();
+        finish();
+        return true;
     }
 
 }
