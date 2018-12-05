@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             Intent intent = new Intent(getApplicationContext(), LandscapeInLectureActivity.class);
             intent.putExtra("LectureId", getIntent().getIntExtra("LectureId", -1));
-            intent.putExtra("SlideNumber", 1);
+            intent.putExtra("SlideNumber", 0);
             startActivity(intent);
 
             // Close this activity
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
     protected void onStart() {
         super.onStart();
 
-        int slideNumber = getIntent().getIntExtra("SlideNumber", 1);
+        int slideNumber = getIntent().getIntExtra("SlideNumber", 0);
         sendSlideNumber(slideNumber);
     }
 

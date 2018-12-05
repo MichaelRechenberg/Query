@@ -37,7 +37,7 @@ public class LandscapeInLectureActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-        int slideNumber = getIntent().getIntExtra("SlideNumber", 1);
+        int slideNumber = getIntent().getIntExtra("SlideNumber", 0);
         LectureSlidesFragment lsf = (LectureSlidesFragment) getSupportFragmentManager().findFragmentById(R.id.landscape_in_lecture_slides_frame_layout);
         lsf.setAndRedrawSlideNumber(slideNumber);
     }
