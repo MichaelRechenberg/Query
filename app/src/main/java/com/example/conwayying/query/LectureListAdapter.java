@@ -17,6 +17,7 @@ import com.example.conwayying.query.data.LectureDataEntry;
 import com.example.conwayying.query.data.entity.Lecture;
 import com.google.common.io.Resources;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +67,10 @@ public class LectureListAdapter extends RecyclerView.Adapter<LectureListAdapter.
             final Pair<Integer, Integer> noteResolvedCountPair = dataEntry.noteResolvedCountPair;
             final Pair<Integer, Integer> confusionMarkResolvedCountPair = dataEntry.confusionMarkResolvedCountPair;
 
-            holder.classItemView.setText(current.getLectureDate().toString());
+            final SimpleDateFormat lectureDateFormat = new SimpleDateFormat("MMM dd, yyyy");
+            final String lectureDateAsString = lectureDateFormat.format(current.getLectureDate());
+            holder.classItemView.setText(lectureDateAsString);
+
             holder.classItemView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     // Change the LectureListActivity to what it needs to go to next
