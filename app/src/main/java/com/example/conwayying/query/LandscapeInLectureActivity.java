@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -13,8 +14,11 @@ import com.example.conwayying.query.data.LectureSlidesFragment;
 
 public class LandscapeInLectureActivity extends AppCompatActivity
     implements LectureSlidesFragment.OnFragmentInteractionListener,
-        ButtonsFragment.GetSlideNumberInterface {
+        ButtonsFragment.GetSlideNumberInterface,
+        ButtonsFragment.RefreshTimestampsInterface,
+        ButtonsFragment.RefreshQuestionsInterface {
 
+    private ActionBar actionBar;
 
     // Store the lecture id taken from the Intent that started this activity
     private int lectureId;
@@ -25,6 +29,10 @@ public class LandscapeInLectureActivity extends AppCompatActivity
         setContentView(R.layout.activity_landscape_in_lecture);
 
         lectureId = getIntent().getIntExtra("LectureId", -1);
+
+        // Added actionBar stuff (back arrow on top of screen)
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.landscape_in_lecture_slides_frame_layout, new LectureSlidesFragment());
@@ -71,5 +79,25 @@ public class LandscapeInLectureActivity extends AppCompatActivity
             // Remove this activity from the activity stack
             this.finish();
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        //code it to launch an intent to the activity you want
+        //Intent intent = new Intent(getApplicationContext(), ClassListActivity.class);
+        //getApplicationContext().startActivity(intent);
+        onBackPressed();
+        finish();
+        return true;
+    }
+
+    @Override
+    public void refreshTime() {
+        // do nothing because the landscape view doesn't have a list of timestamps to refresh
+    }
+
+    @Override
+    public void refreshQuestions() {
+        // do nothing because the landscape view doesn't have a list of questions to refresh
     }
 }
