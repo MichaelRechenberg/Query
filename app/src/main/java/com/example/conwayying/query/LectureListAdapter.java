@@ -3,6 +3,7 @@ package com.example.conwayying.query;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Pair;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.conwayying.query.data.LectureDataEntry;
 import com.example.conwayying.query.data.entity.Lecture;
+import com.google.common.io.Resources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,13 +75,19 @@ public class LectureListAdapter extends RecyclerView.Adapter<LectureListAdapter.
             });
             if (confusionMarkResolvedCountPair.first + confusionMarkResolvedCountPair.second > 0) {
                 Log.d("Confusion", "" + confusionMarkResolvedCountPair.first);
-                if (confusionMarkResolvedCountPair.first / (confusionMarkResolvedCountPair.second + confusionMarkResolvedCountPair.first) > .8) {
-                    holder.indicatorView.setBackgroundColor(Color.parseColor("#006400"));
-                    //Log.d("Confusion", "here");
-                } else {
-                    holder.indicatorView.setBackgroundColor(Color.parseColor("#FF0000"));
+                //Log.d("Ratio", Double.toString(confusionMarkResolvedCountPair.first / (confusionMarkResolvedCountPair.second + confusionMarkResolvedCountPair.first)));
+                double ratio = confusionMarkResolvedCountPair.first / (confusionMarkResolvedCountPair.second + confusionMarkResolvedCountPair.first);
+                if (ratio > .8) {
+                    holder.indicatorView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.colorPrimary)))); // green
+                    //Log.d("Color", "#FFDD99");
+                } else if (ratio > .4) {
+                    holder.indicatorView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.colorSecondary)))); // red
                     //Log.d("Confusion", "there");
+                } else {
+                    holder.indicatorView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.colorTertiary))));
                 }
+            } else {
+                holder.indicatorView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.colorPrimary))));
             }
         } else {
             holder.classItemView.setText("No Classes");

@@ -1,13 +1,12 @@
 package com.example.conwayying.query;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 
-import java.io.IOException;
-import java.io.InputStream;
+import com.example.conwayying.query.data.LectureSlidesPagerAdapter;
 
 /**
  * Container of "lecture slides" from a directory of images named
@@ -15,38 +14,47 @@ import java.io.InputStream;
  */
 public class LectureSlideContainer {
 
-    private static String MOCK_LECTURE_ASSET_DIR = "mock-slides/";
+    public static final String MOCK_LECTURE_ASSET_DIR = "mock-slides/";
 
-    private ImageView mImageView;
+    private ViewPager mViewPager;
     private SeekBar mSeekBar;
     private Context mContext;
-    private int currentSlideNumber;
+    private FragmentManager mFragmentManager;
+
+
+
+    private int mCurrentSlideNumber;
+
 
     /**
      * A wrapper object for the "lecture slides" (mocked as a series of locally stored
-     *  jpg files named 1.jpg, 2.jpg... etc.
+     *  jpg files named 0.jpg, 1.jpg, 2.jpg, ... etc.
      *
-     *  Defaults to slide 1
+     *  Defaults to slide 0
      *
      * @param context Context for the application
-     * @param imageView ImageView to render the slides onto
+     * @param fm FragmentManager of hosting Activity
+     * @param viewPager ViewPager to render the slides onto and have swipe gestures for
      * @param seekBar The Seekbar to use for changing slides rapidly
      */
-    public LectureSlideContainer(Context context, ImageView imageView, SeekBar seekBar){
+    public LectureSlideContainer(Context context, FragmentManager fm, ViewPager viewPager, SeekBar seekBar){
         this.mContext = context;
-        this.mImageView = imageView;
+        this.mViewPager = viewPager;
         this.mSeekBar = seekBar;
+        this.mFragmentManager = fm;
 
-        this.setupSeekBar(seekBar, this);
+        this.mCurrentSlideNumber = 0;
 
-        this.currentSlideNumber = 1;
+        this.setupViewPager(mViewPager, this, fm);
+        this.setupSeekBar(mSeekBar, this);
     }
+
 
     /**
      * @return The current slide number
      */
     public int getCurrentSlideNumber(){
-        return this.currentSlideNumber;
+        return this.mCurrentSlideNumber;
     }
 
     /**
@@ -54,42 +62,31 @@ public class LectureSlideContainer {
      * @param slideNumber The slide number to change to
      */
     public void setSlideNumber(int slideNumber){
-        this.currentSlideNumber = slideNumber;
+        this.mCurrentSlideNumber = slideNumber;
     }
 
     /**
      * Redraws the slide based on the current slide number, updates seek bar
      */
     public void redrawSlide(){
-        Log.d("LectureSlides", "Redrawing lecture slides to slide " + this.currentSlideNumber);
-        InputStream inputStream = null;
+        Log.d("LectureSlides", "Redrawing lecture slides to slide " + this.mCurrentSlideNumber);
 
-        try {
-            String slideFilePath = MOCK_LECTURE_ASSET_DIR + "slide" + this.currentSlideNumber + ".jpg";
-            inputStream = this.mContext.getAssets().open(slideFilePath);
-            Drawable slideDrawable = Drawable.createFromStream(inputStream, null);
-            this.mImageView.setImageDrawable(slideDrawable);
-            inputStream.close();
-
-            mSeekBar.setProgress(this.currentSlideNumber);
-
-        } catch (IOException ex){
-            Log.e("LectureSlides","Could not find slide file " + ex.toString());
-        }
+        mViewPager.setCurrentItem(this.mCurrentSlideNumber, false);
+        mSeekBar.setProgress(this.mCurrentSlideNumber);
     }
 
     private void setupSeekBar(SeekBar seekBar, final LectureSlideContainer lectureSlideContainer){
-        // This 15 magic number is because our mock slide deck had 16 slides
-        seekBar.setMax(15);
+        // This 14 magic number is because our mock slide deck had 15 slides
+        seekBar.setMax(14);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 switch (progress) {
-                    // setMin() is only for API 26, so as a hack case 0 maps to the first slide (slide 1)
                     case 0:
-                        lectureSlideContainer.setSlideNumber(1);
+                        lectureSlideContainer.setSlideNumber(0);
                         lectureSlideContainer.redrawSlide();
+                        break;
                     case 1:
                         lectureSlideContainer.setSlideNumber(1);
                         lectureSlideContainer.redrawSlide();
@@ -164,4 +161,44 @@ public class LectureSlideContainer {
             }
         });
     }
+
+
+    /**
+     * Setup the ViewPager for the LectureSlideContainer so that both the mSlideNumber is updated
+     *  whenever ths user scrolls through the slides and the mSeekBar is also updated to reflect
+     *  the currently selected lecture slide
+     * @param viewPager The ViewPager to setup
+     * @param lectureSlideContainer this LectureSlideContainer
+     * @param fm FragmentManager to use for adapter
+     */
+    private void setupViewPager(final ViewPager viewPager, final LectureSlideContainer lectureSlideContainer,
+                                final FragmentManager fm){
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // Log.d("Foo", "OnPageScrolled " + position);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                // Log.d("Foo", "OnPageSelected " + position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                Log.d("Foo", "onPageScrollStateChanged");
+                if (state == ViewPager.SCROLL_STATE_IDLE){
+                    int slideNumber = viewPager.getCurrentItem();
+                    Log.d("Foo", "slideNumber in onPageScrollStateChanged: " + slideNumber);
+                    lectureSlideContainer.mCurrentSlideNumber = slideNumber;
+                    lectureSlideContainer.mSeekBar.setProgress(lectureSlideContainer.mCurrentSlideNumber);
+
+                }
+            }
+        });
+
+        viewPager.setAdapter(new LectureSlidesPagerAdapter(fm));
+    }
 }
+
+

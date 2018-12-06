@@ -1,9 +1,12 @@
 package com.example.conwayying.query;
 
-import android.app.Activity;
+
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,13 +21,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class LectureListActivity extends Activity {
+public class LectureListActivity extends AppCompatActivity {
+
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lecture_list);
 
+
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         QueryAppRepository repo = new QueryAppRepository(getApplication());
         int classId = getIntent().getIntExtra("ClassId", -1);
@@ -38,6 +46,16 @@ public class LectureListActivity extends Activity {
         param.repo = repo;
         new GetLectureDataEntryAsyncTask(this, recyclerView).execute(param);
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        //code it to launch an intent to the activity you want
+        //Intent intent = new Intent(getApplicationContext(), ClassListActivity.class);
+        //getApplicationContext().startActivity(intent);
+        onBackPressed();
+        finish();
+        return true;
     }
 
     public class GetLecturesParams {

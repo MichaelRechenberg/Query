@@ -11,10 +11,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/darker_gray"
+        android:background="@color/colorPrimary"
         android:fontFamily="@font/oswald"
-        android:textColor="@color/colorPrimary"
-        android:textSize="30sp" />
+        android:textColor="@color/colorLightAccent"
+        android:textSize="30sp"
+        android:padding="10dp"/>
 
     <Button
         android:id="@+id/indicator"
