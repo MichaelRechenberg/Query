@@ -30,4 +30,10 @@
     <string name="question_button_text">Question</string>
     <string name="record_button_text">Record</string>
     <string name="new_note_is_private_checkbox_text">Private Note</string>
+    
+    
+    <string-array name="sort_list_menu_choices">
+        <item>Date Created</item>
+        <item>Resolved State</item>
+    </string-array>
 </resources>
