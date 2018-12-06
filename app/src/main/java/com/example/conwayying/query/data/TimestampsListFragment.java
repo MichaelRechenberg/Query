@@ -137,42 +137,6 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
         setListAdapter(adapter);
     }
 
-    public void refreshTimestampFragment() {
-        // Refreshes the fragment stuff
-        Log.d("Refreshing Timestamps", "Let's go");
-        String[] from = {"Confusion Mark", "Is Resolved Status"};
-        int[] to = {R.id.confusionMarkText, R.id.thirdLine};
-
-        int lectureId = this.getArguments().getInt("LectureId", -1);
-        List<ConfusionMark> confusionMarksList = qar.getAllConfusionMarksForLecture(lectureId);
-
-        HashMap<String, String> rowInformation;
-
-        // Need this to keep same reference
-        data.clear();
-
-        for (ConfusionMark confusionMark : confusionMarksList) {
-            rowInformation = new HashMap<String, String>();
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-            String concatenatedStartEnd;
-            if (confusionMark.getEndDate() == null) {
-                concatenatedStartEnd = sdf.format(confusionMark.getStartDate());
-                Log.d("lol", "falling");
-            }
-            else {
-                concatenatedStartEnd = sdf.format(confusionMark.getStartDate()) + " - " + sdf.format(confusionMark.getEndDate());
-            }
-            rowInformation.put("Confusion Mark", concatenatedStartEnd);
-            rowInformation.put("Slide Number", Integer.toString(confusionMark.getSlideNumber()));
-            rowInformation.put("Is Resolved Status", confusionMark.getIsResolved() ? "Resolved" : "Unresolved");
-            rowInformation.put("isResolved", String.valueOf(confusionMark.getIsResolved()));
-            rowInformation.put("id", Integer.toString(confusionMark.getConfusionId()));
-
-            data.add(rowInformation);
-        }
-        adapter.notifyDataSetChanged();
-    }
-
     @Override
     public void onListItemClick(ListView list, View v, int position, long id) {
 

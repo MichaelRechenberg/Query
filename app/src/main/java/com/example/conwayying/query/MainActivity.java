@@ -24,7 +24,8 @@ import java.sql.Time;
 
 public class MainActivity extends AppCompatActivity implements QuestionsListFragment.OnFragmentInteractionListener, TimestampsListFragment.OnFragmentInteractionListener,
         TimestampsFragment.OnFragmentInteractionListener, LectureSlidesFragment.OnFragmentInteractionListener,
-        ButtonsFragment.GetSlideNumberInterface, TimestampsListFragment.TimestampClicked, QuestionsListFragment.QuestionClicked {
+        ButtonsFragment.GetSlideNumberInterface, TimestampsListFragment.TimestampClicked, QuestionsListFragment.QuestionClicked,
+        ButtonsFragment.RefreshTimestampsInterface, ButtonsFragment.RefreshQuestionsInterface {
 
     private TextView mTextMessage;
     private QueryAppRepository queryAppRepository;
@@ -42,11 +43,11 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
             TimestampsListFragment tlf = TimestampsListFragment.newInstance(queryAppRepository, lectureId);
             switch (item.getItemId()) {
                 case R.id.navigation_questions:
-                    transaction.replace(R.id.frame_layout, mlf);
+                    transaction.replace(R.id.frame_layout, mlf, "Questions");
                     transaction.commit();
                     break;
                 case R.id.navigation_timestamps:
-                    transaction.replace(R.id.frame_layout, tlf);
+                    transaction.replace(R.id.frame_layout, tlf, "Timestamps");
                     transaction.commit();
                     break;
             }
@@ -73,11 +74,47 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
         return slidesFrag.getLectureSlideNumber();
     }
 
-    //@Override
-    //public void refreshTime() {
-    //    TimestampsListFragment times = (TimestampsListFragment) getSupportFragmentManager().findFragmentById(R.id.timestamps);
-    //    times.refreshTimestampFragment();
-    //}
+    @Override
+    public void refreshTime() {
+        TimestampsListFragment times = (TimestampsListFragment) getSupportFragmentManager().findFragmentByTag("Timestamps");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (times != null && times.isVisible()) {
+            //times.refreshTimestampFragment();
+            Fragment frg = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+            transaction.detach(frg);
+            transaction.attach(frg);
+            transaction.commit();
+        } else {
+
+            int lectureId = getIntent().getIntExtra("LectureId", -1);
+            TimestampsListFragment tlf = TimestampsListFragment.newInstance(queryAppRepository, lectureId);
+            transaction.replace(R.id.frame_layout, tlf, "Timestamps");
+            transaction.commit();
+        }
+
+        Log.d("REFRESH", "We trying");
+    }
+
+    @Override
+    public void refreshQuestions() {
+        QuestionsListFragment times = (QuestionsListFragment) getSupportFragmentManager().findFragmentByTag("Questions");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (times != null && times.isVisible()) {
+            //times.refreshTimestampFragment();
+            Fragment frg = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+            transaction.detach(frg);
+            transaction.attach(frg);
+            transaction.commit();
+        } else {
+
+            int lectureId = getIntent().getIntExtra("LectureId", -1);
+            QuestionsListFragment tlf = QuestionsListFragment.newInstance(queryAppRepository, lectureId);
+            transaction.replace(R.id.frame_layout, tlf, "Questions");
+            transaction.commit();
+        }
+
+        Log.d("REFRESH", "We trying");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
