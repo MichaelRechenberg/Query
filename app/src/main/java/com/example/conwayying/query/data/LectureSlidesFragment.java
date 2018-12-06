@@ -1,11 +1,16 @@
 package com.example.conwayying.query.data;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +42,8 @@ public class LectureSlidesFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    // ImageView to render the slides
-    private ImageView mImageView;
+    // ViewPager to render the slides as a series of swipeable images
+    private ViewPager mViewPager;
     // SeekBar to adjust which slide is displayed
     private SeekBar mSeekBar;
 
@@ -93,10 +98,12 @@ public class LectureSlidesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.mImageView = (ImageView) view.findViewById(R.id.lecture_slides_image_view);
+        this.mViewPager = (ViewPager) view.findViewById(R.id.lecture_slides_view_pager);
         this.mSeekBar = (SeekBar) view.findViewById(R.id.lecture_slides_seek_bar);
 
-        this.lectureSlideContainer = new LectureSlideContainer(getActivity(), this.mImageView, this.mSeekBar);
+        Activity hostActivity = getActivity();
+        FragmentManager fm = ((FragmentActivity) hostActivity).getSupportFragmentManager();
+        this.lectureSlideContainer = new LectureSlideContainer(hostActivity, fm, mViewPager, mSeekBar);
         this.lectureSlideContainer.redrawSlide();
     }
 
@@ -107,7 +114,6 @@ public class LectureSlidesFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_lecture_slides, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -146,3 +152,6 @@ public class LectureSlidesFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 }
+
+
+

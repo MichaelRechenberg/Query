@@ -119,6 +119,30 @@ public class QuestionsListFragment extends android.support.v4.app.ListFragment {
         setListAdapter(adapter);
     }
 
+    public void refreshQuestionsFragment() {
+        // Refreshes the fragment stuff
+        Log.d("Refreshing Notes", "Let's go");
+        String[] from = {"Note Text", "Private Status", "Is Resolved Status"};
+
+        int[] to = {R.id.firstLine, R.id.secondLine, R.id.thirdLine};
+        int lectureId = this.getArguments().getInt("LectureId", -1);
+        List<Note> notesList = qar.getAllNotesForLecture(lectureId);
+        HashMap<String, String> rowInformation;
+
+        data.clear();
+
+        for (Note note : notesList) {
+            rowInformation = new HashMap<String, String>();
+            rowInformation.put("Note Text", note.getNoteText());
+            rowInformation.put("Private Status", note.getIsPrivate() ? "Private" : "Public");
+            rowInformation.put("Is Resolved Status", note.getIsResolved() ? "Resolved" : "Unresolved");
+            rowInformation.put("Slide Number", Integer.toString(note.getSlideNumber()));
+            rowInformation.put("id", Integer.toString(note.getNoteId()));
+            data.add(rowInformation);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onListItemClick(ListView list, View v, int position, long id) {
         clickedOn(Integer.parseInt(data.get(position).get("Slide Number")));

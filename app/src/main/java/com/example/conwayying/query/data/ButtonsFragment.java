@@ -43,6 +43,11 @@ public class ButtonsFragment extends Fragment {
     private ImageButton mNoteButton;
 
 
+    private RefreshTimestampsInterface mCallback;
+    private RefreshQuestionsInterface nCallback;
+
+
+
     // Fragment state
     private Date lastStartRecordDate;
 
@@ -97,6 +102,8 @@ public class ButtonsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mCallback = (RefreshTimestampsInterface) context;
+        nCallback = (RefreshQuestionsInterface) context;
         if (context instanceof GetSlideNumberInterface) {
             mListener = (GetSlideNumberInterface) context;
         } else {
@@ -126,6 +133,10 @@ public class ButtonsFragment extends Fragment {
     }
 
 
+    public interface RefreshTimestampsInterface {
+        void refreshTime();
+    }
+
     /**
      * Initialize the WTF s.t. when pressed, it inserts a ConfusionMark into the DB
      * @param button The WTF Button
@@ -147,6 +158,9 @@ public class ButtonsFragment extends Fragment {
                 param.confusionMark = confusionMark;
                 Log.d("DebugDB", "Firing and forgetting insertion of confusion mark off of WTF button");
                 new InsertConfusionMarkAsyncTask().execute(param);
+
+                mCallback.refreshTime();
+
             }
         });
     }
@@ -187,9 +201,14 @@ public class ButtonsFragment extends Fragment {
                     param.confusionMark = confusionMark;
                     Log.d("DebugDB", "Firing and forgetting interval ConfusionMark");
                     new InsertConfusionMarkAsyncTask().execute(param);
+                    mCallback.refreshTime();
                 }
             }
         });
+    }
+
+    public interface RefreshQuestionsInterface {
+        void refreshQuestions();
     }
 
     /**
@@ -236,6 +255,8 @@ public class ButtonsFragment extends Fragment {
 
                                 Log.d("Foo", "Firing and forgetting to insert note");
                                 new InsertNoteMarkAsyncTask().execute(param);
+                                nCallback.refreshQuestions();
+
                             }
                         })
                         .setNegativeButton(R.string.new_note_dismiss_btn_text, new DialogInterface.OnClickListener() {
