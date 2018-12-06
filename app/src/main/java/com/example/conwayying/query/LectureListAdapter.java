@@ -76,15 +76,18 @@ public class LectureListAdapter extends RecyclerView.Adapter<LectureListAdapter.
             if (confusionMarkResolvedCountPair.first + confusionMarkResolvedCountPair.second > 0) {
                 Log.d("Confusion", "" + confusionMarkResolvedCountPair.first);
                 //Log.d("Ratio", Double.toString(confusionMarkResolvedCountPair.first / (confusionMarkResolvedCountPair.second + confusionMarkResolvedCountPair.first)));
-                if (confusionMarkResolvedCountPair.first / (confusionMarkResolvedCountPair.second + confusionMarkResolvedCountPair.first) > .8) {
-                    holder.indicatorView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.colorSecondary)))); // green
+                double ratio = confusionMarkResolvedCountPair.first / (confusionMarkResolvedCountPair.second + confusionMarkResolvedCountPair.first);
+                if (ratio > .8) {
+                    holder.indicatorView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.colorPrimary)))); // green
                     //Log.d("Color", "#FFDD99");
-                } else {
-                    holder.indicatorView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.colorTertiary)))); // red
+                } else if (ratio > .4) {
+                    holder.indicatorView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.colorSecondary)))); // red
                     //Log.d("Confusion", "there");
+                } else {
+                    holder.indicatorView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.colorTertiary))));
                 }
             } else {
-                holder.indicatorView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.colorSecondary))));
+                holder.indicatorView.setBackgroundColor(Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.colorPrimary))));
             }
         } else {
             holder.classItemView.setText("No Classes");

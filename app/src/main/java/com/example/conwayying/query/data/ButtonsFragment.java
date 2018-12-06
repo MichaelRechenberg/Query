@@ -42,6 +42,9 @@ public class ButtonsFragment extends Fragment {
     private ImageButton mNoteButton;
 
 
+    //private refreshTimestamps mCallback;
+
+
     // Fragment state
     private Date lastStartRecordDate;
 
@@ -96,6 +99,7 @@ public class ButtonsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        //mCallback = (refreshTimestamps) context;
         if (context instanceof GetSlideNumberInterface) {
             mListener = (GetSlideNumberInterface) context;
         } else {
@@ -125,6 +129,10 @@ public class ButtonsFragment extends Fragment {
     }
 
 
+    public interface RefreshTimestamps {
+        void refreshTime();
+    }
+
     /**
      * Initialize the WTF s.t. when pressed, it inserts a ConfusionMark into the DB
      * @param button The WTF Button
@@ -146,6 +154,9 @@ public class ButtonsFragment extends Fragment {
                 param.confusionMark = confusionMark;
                 Log.d("DebugDB", "Firing and forgetting insertion of confusion mark off of WTF button");
                 new InsertConfusionMarkAsyncTask().execute(param);
+
+                //mCallback.refreshTime();
+
             }
         });
     }

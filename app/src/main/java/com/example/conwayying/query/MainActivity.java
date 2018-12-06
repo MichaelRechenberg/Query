@@ -19,6 +19,8 @@ import com.example.conwayying.query.data.QueryAppRepository;
 import com.example.conwayying.query.data.TimestampsFragment;
 import com.example.conwayying.query.data.TimestampsListFragment;
 
+import java.sql.Time;
+
 
 public class MainActivity extends AppCompatActivity implements QuestionsListFragment.OnFragmentInteractionListener, TimestampsListFragment.OnFragmentInteractionListener,
         TimestampsFragment.OnFragmentInteractionListener, LectureSlidesFragment.OnFragmentInteractionListener,
@@ -70,6 +72,12 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
         LectureSlidesFragment slidesFrag = (LectureSlidesFragment) getSupportFragmentManager().findFragmentById(R.id.lecture_slides_frame_layout);
         return slidesFrag.getLectureSlideNumber();
     }
+
+    //@Override
+    //public void refreshTime() {
+    //    TimestampsListFragment times = (TimestampsListFragment) getSupportFragmentManager().findFragmentById(R.id.timestamps);
+    //    times.refreshTimestampFragment();
+    //}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
