@@ -231,11 +231,12 @@ public class ButtonsFragment extends Fragment {
                 Log.d("Foo", "Question button clicked");
                 Log.d("Foo", "Spawning Fullscreen dialog");
 
+
                 View dialogViewInflated = LayoutInflater.from(getContext()).inflate(R.layout.new_note_dialog_layout, (ViewGroup) getView(), false);
                 final EditText noteText = (EditText) dialogViewInflated.findViewById(R.id.new_note_text);
                 final CheckBox isPrivateCheckbox = (CheckBox) dialogViewInflated.findViewById(R.id.new_note_is_private_checkbox);
 
-                final Dialog createQuestionDialog = new AlertDialog.Builder(getContext())
+                final AlertDialog createQuestionDialog = new AlertDialog.Builder(getContext())
                         .setTitle(R.string.new_note_title_text)
                         .setView(dialogViewInflated)
                         .setPositiveButton(R.string.new_note_confirm_btn_text, new DialogInterface.OnClickListener() {
@@ -267,6 +268,20 @@ public class ButtonsFragment extends Fragment {
                         })
                         .setCancelable(true)
                         .create();
+
+
+
+                createQuestionDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+
+                        createQuestionDialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                                .setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                        createQuestionDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+                                .setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+
+                    }
+                });
 
                 createQuestionDialog.show();
             }
