@@ -20,17 +20,17 @@
         <item>Neptune</item>
     </string-array>
 
-    <string name="new_note_confirm_btn_text">Save Note</string>
-    <string name="new_note_dismiss_btn_text">Discard Note</string>
-    <string name="new_note_title_text">Create New Note</string>
+    <string name="new_note_confirm_btn_text">Save Question</string>
+    <string name="new_note_dismiss_btn_text">Discard Question</string>
+    <string name="new_note_title_text">Create New Question</string>
+    <string name="new_note_is_private_checkbox_text">Ask Lecturer?</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="wtf_button_text">WTF</string>
     <string name="question_button_text">Ask Question</string>
     <string name="record_button_text">Time Interval</string>
-    <string name="new_note_is_private_checkbox_text">Private Note</string>
-    
+
     
     <string-array name="sort_list_menu_choices">
         <item>Date Created</item>
