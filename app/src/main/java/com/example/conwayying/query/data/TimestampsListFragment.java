@@ -108,7 +108,40 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new SimpleAdapter(getActivity(), data, R.layout.timestamps_fragment_list_item, from, to);
+        int lectureId = this.getArguments().getInt("LectureId", -1);
+        List<ConfusionMark> confusionMarksList = qar.getAllConfusionMarksForLecture(lectureId);
+
+        // We populate the data array list
+        // Each hash map in the array list represents a single row's information
+        HashMap<String, String> rowInformation;
+        // Clear data
+        data = new ArrayList<>();
+
+        for (ConfusionMark confusionMark : confusionMarksList) {
+            rowInformation = new HashMap<String, String>();
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            String concatenatedStartEnd;
+            if (confusionMark.getEndDate() == null) {
+                concatenatedStartEnd = sdf.format(confusionMark.getStartDate());
+                Log.d("lol", "falling");
+            }
+            else {
+                concatenatedStartEnd = sdf.format(confusionMark.getStartDate()) + " - " + sdf.format(confusionMark.getEndDate());
+            }
+            rowInformation.put("Confusion Mark", concatenatedStartEnd);
+            rowInformation.put("Slide Number", Integer.toString(confusionMark.getSlideNumber()));
+            rowInformation.put("Is Resolved Status", confusionMark.getIsResolved() ? "Resolved" : "Unresolved");
+            rowInformation.put("isResolved", String.valueOf(confusionMark.getIsResolved()));
+            rowInformation.put("id", Integer.toString(confusionMark.getConfusionId()));
+
+            data.add(rowInformation);
+        }
+
+        String[] from = {"Confusion Mark", "Is Resolved Status"};
+
+        int[] to = {R.id.confusionMarkText, R.id.thirdLine};
+
+        adapter = new CustomSimpleAdapter(getActivity(), data, R.layout.timestamps_fragment_list_item, from, to);
         setListAdapter(adapter);
 
         // Default to time created

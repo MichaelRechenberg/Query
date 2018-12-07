@@ -2,13 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/navigation_timestamps"
+        android:icon="@drawable/baseline_access_time_24px"
+        android:title="@string/title_timestamps" />
+    <item
         android:id="@+id/navigation_questions"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/twotone_note_24px"
         android:title="@string/title_questions" />
 
-    <item
-        android:id="@+id/navigation_timestamps"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_timestamps" />
+
 
 </menu>

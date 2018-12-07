@@ -104,7 +104,8 @@ public class QuestionsListFragment extends android.support.v4.app.ListFragment {
         // default to sorting questions by time created
         mSortCriteria = SORT_BY_TIME_CREATED;
 
-        adapter = new SimpleAdapter(getActivity(), data, R.layout.question_fragment_list_item, from, to);
+        //adapter = new SimpleAdapter(getActivity(), data, R.layout.question_fragment_list_item, from, to);
+        adapter = new CustomSimpleAdapter(getActivity(), data, R.layout.question_fragment_list_item, from, to);
         setListAdapter(adapter);
 
         refreshQuestionList(mSortCriteria);
