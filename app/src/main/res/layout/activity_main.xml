@@ -10,29 +10,64 @@
     <FrameLayout
         android:id="@+id/lecture_slides_frame_layout"
         android:layout_width="match_parent"
-        android:layout_height="287dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttons_frame_layout">
+        android:layout_height="220dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/sort_list_constraint_layout"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/frame_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lecture_slides_frame_layout">
+
+        <TextView
+            android:id="@+id/sort_list_help_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Sort By:"
+            android:textAlignment="textStart"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Spinner
+            android:id="@+id/sort_list_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="1dp"
+            android:entries="@array/sort_list_menu_choices"
+            app:layout_constraintBottom_toBottomOf="@+id/sort_list_help_text"
+            app:layout_constraintLeft_toRightOf="@+id/sort_list_help_text"
+            app:layout_constraintStart_toEndOf="@+id/sort_list_help_text"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:animateLayoutChanges="true"
+        app:layout_constraintBottom_toTopOf="@+id/buttons_frame_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sort_list_constraint_layout">
 
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/buttons_frame_layout"
         android:layout_width="match_parent"
-        android:layout_height="97dp"
-        app:layout_constraintBottom_toTopOf="@+id/frame_layout">
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/frame_layout"
-        android:layout_width="match_parent"
-        android:layout_height="190dp"
-        android:layout_above="@+id/navigation"
-        android:layout_marginTop="8dp"
-        android:animateLayoutChanges="true"
-        app:layout_constraintBottom_toTopOf="@id/navigation"
-        tools:layout_editor_absoluteX="0dp">
+        android:layout_height="90dp"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintStart_toStartOf="parent">
 
     </FrameLayout>
 

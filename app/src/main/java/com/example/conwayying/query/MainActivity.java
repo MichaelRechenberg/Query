@@ -7,11 +7,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.conwayying.query.data.ButtonsFragment;
@@ -22,16 +27,22 @@ import com.example.conwayying.query.data.TimestampsFragment;
 import com.example.conwayying.query.data.TimestampsListFragment;
 
 import java.sql.Time;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements QuestionsListFragment.OnFragmentInteractionListener, TimestampsListFragment.OnFragmentInteractionListener,
         TimestampsFragment.OnFragmentInteractionListener, LectureSlidesFragment.OnFragmentInteractionListener,
         ButtonsFragment.GetSlideNumberInterface, TimestampsListFragment.TimestampClicked, QuestionsListFragment.QuestionClicked,
-        ButtonsFragment.RefreshTimestampsInterface, ButtonsFragment.RefreshQuestionsInterface {
+        ButtonsFragment.RefreshTimestampsInterface, ButtonsFragment.RefreshQuestionsInterface,
+        AdapterView.OnItemSelectedListener
+    {
 
     private TextView mTextMessage;
     private QueryAppRepository queryAppRepository;
     private ActionBar actionBar;
+    private BottomNavigationView bottomNavigationView;
+
+    private Spinner sortListSpinner;
 
     // MainActivity state
     // The lecture id for this lecture
@@ -51,10 +62,19 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
                 case R.id.navigation_questions:
                     transaction.replace(R.id.frame_layout, mlf, "Questions");
                     transaction.commit();
+
+                    // Set the sort criteria of spinner to default "Date Created"
+                    // QuestionListFragment default sorts by Date Created as well
+                    Log.d("Foo", "REEE");
+                    sortListSpinner.setSelection(0);
                     break;
                 case R.id.navigation_timestamps:
                     transaction.replace(R.id.frame_layout, tlf, "Timestamps");
                     transaction.commit();
+
+                    // Set the sort criteria of spinner to default "Date Created"
+                    // TimestampsListFragment default sorts by Date Created as well
+                    sortListSpinner.setSelection(0);
                     break;
             }
             return true;
@@ -80,43 +100,47 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
         return slidesFrag.getLectureSlideNumber();
     }
 
+    // Refresh the timestamp list
+    // If the timestamp list fragment is not currently visible, replace the current list fragment
+    //  with the timestamp list fragment and set the bottom navigation bar to "Timestamps"
     @Override
     public void refreshTime() {
         TimestampsListFragment times = (TimestampsListFragment) getSupportFragmentManager().findFragmentByTag("Timestamps");
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (times != null && times.isVisible()) {
-            //times.refreshTimestampFragment();
-            Fragment frg = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
-            transaction.detach(frg);
-            transaction.attach(frg);
-            transaction.commit();
+            times.refreshTimestampsList();
         } else {
 
             int lectureId = getIntent().getIntExtra("LectureId", -1);
             TimestampsListFragment tlf = TimestampsListFragment.newInstance(queryAppRepository, lectureId);
             transaction.replace(R.id.frame_layout, tlf, "Timestamps");
             transaction.commit();
+            bottomNavigationView.setSelectedItemId(R.id.navigation_timestamps);
+            // When switching the list fragment, default the sort spinner to "Date Created"
+            sortListSpinner.setSelection(0);
         }
 
         Log.d("REFRESH", "We trying");
     }
 
+    // Refresh the questions list
+    // If the questions list fragment is not currently visible, replace the current list fragment
+    //  with the questions list fragment and set the bottom navigation bar to "Questions"
     @Override
     public void refreshQuestions() {
         QuestionsListFragment times = (QuestionsListFragment) getSupportFragmentManager().findFragmentByTag("Questions");
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (times != null && times.isVisible()) {
-            //times.refreshTimestampFragment();
-            Fragment frg = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
-            transaction.detach(frg);
-            transaction.attach(frg);
-            transaction.commit();
+            times.refreshQuestionList();
         } else {
 
             int lectureId = getIntent().getIntExtra("LectureId", -1);
             QuestionsListFragment tlf = QuestionsListFragment.newInstance(queryAppRepository, lectureId);
             transaction.replace(R.id.frame_layout, tlf, "Questions");
             transaction.commit();
+            bottomNavigationView.setSelectedItemId(R.id.navigation_questions);
+            // When switching the list fragment, default the sort spinner to "Date Created"
+            sortListSpinner.setSelection(0);
         }
 
         Log.d("REFRESH", "We trying");
@@ -139,15 +163,25 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
             this.finish();
         }
 
+        queryAppRepository = new QueryAppRepository(getApplication());
+
+        // Since bottomNavigationView uses sortListSpinner to change sort criteria on navigation change,
+        //  sortListSpinner must be initialized before bottomNavigationView
+        sortListSpinner = (Spinner) findViewById(R.id.sort_list_spinner);
+        sortListSpinner.setAdapter(ArrayAdapter.createFromResource(this, R.array.sort_list_menu_choices, R.layout.support_simple_spinner_dropdown_item));
+        sortListSpinner.setOnItemSelectedListener(this);
+
         // Added actionBar stuff (back arrow on top of screen)
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        // We start in the timestamps view, so set the menu navigation to that
+        bottomNavigationView.setSelectedItemId(R.id.navigation_timestamps);
 
-        queryAppRepository = new QueryAppRepository(getApplication());
+
 
         lectureId = getIntent().getIntExtra("LectureId", -1);
 
@@ -197,4 +231,53 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
         return true;
     }
 
+    // spinner methods
+
+    // After the user clicks a drop-down option from the spinner, sort the list of entities
+    //  based on the sort criteria, selecting the questions list fragment or timestamp list
+    //  fragment based on fragment tag
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long rowId) {
+
+
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentByTag("Questions");
+
+        Log.d("Foo", "bar");
+        if (fragment != null){
+
+           Log.d("Foo", "found qlf");
+           QuestionsListFragment qlf = (QuestionsListFragment) fragment;
+
+           // rowId mapping taken from spinner's menu array
+           int sortBy = QuestionsListFragment.SORT_BY_TIME_CREATED;
+           if (rowId == 1){
+               sortBy = QuestionsListFragment.SORT_BY_IS_RESOLVED;
+           }
+
+           qlf.refreshQuestionList(sortBy);
+        }
+        else {
+            fragment = fm.findFragmentByTag("Timestamps");
+
+            if (fragment != null){
+                Log.d("Foo", "found tlf");
+                TimestampsListFragment tlf = (TimestampsListFragment) fragment;
+
+                // rowId mapping taken from spinner's menu array
+                int sortBy = TimestampsListFragment.SORT_BY_START_DATE;
+                if (rowId == 1){
+                    sortBy = TimestampsListFragment.SORT_BY_IS_RESOLVED;
+                }
+                tlf.refreshTimestampsList(sortBy);
+            }
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        Log.d("Foo", "asdfsdf");
+        // do nothing
+    }
 }
