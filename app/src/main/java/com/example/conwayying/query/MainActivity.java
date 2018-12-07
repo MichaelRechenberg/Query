@@ -167,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
 
         // Since bottomNavigationView uses sortListSpinner to change sort criteria on navigation change,
         //  sortListSpinner must be initialized before bottomNavigationView
-        // TODO: Give this spinner the ID from Juan's layout
         sortListSpinner = (Spinner) findViewById(R.id.sort_list_spinner);
         sortListSpinner.setAdapter(ArrayAdapter.createFromResource(this, R.array.sort_list_menu_choices, R.layout.support_simple_spinner_dropdown_item));
         sortListSpinner.setOnItemSelectedListener(this);
