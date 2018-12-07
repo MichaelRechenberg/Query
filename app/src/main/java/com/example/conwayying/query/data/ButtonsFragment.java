@@ -2,7 +2,6 @@ package com.example.conwayying.query.data;
 
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -156,10 +154,11 @@ public class ButtonsFragment extends Fragment {
                 ConfusionMarkAsyncTaskParams param = new ConfusionMarkAsyncTaskParams();
                 param.repo = queryAppRepository;
                 param.confusionMark = confusionMark;
+                param.mCallback = mCallback;
                 Log.d("DebugDB", "Firing and forgetting insertion of confusion mark off of WTF button");
                 new InsertConfusionMarkAsyncTask().execute(param);
 
-                mCallback.refreshTime();
+                // mCallback.refreshTime();
 
             }
         });
@@ -199,9 +198,10 @@ public class ButtonsFragment extends Fragment {
                     lastStartRecordDate = null;
                     param.repo = queryAppRepository;
                     param.confusionMark = confusionMark;
+                    param.mCallback = mCallback;
                     Log.d("DebugDB", "Firing and forgetting interval ConfusionMark");
                     new InsertConfusionMarkAsyncTask().execute(param);
-                    mCallback.refreshTime();
+                    // mCallback.refreshTime();
                 }
             }
         });
@@ -253,10 +253,11 @@ public class ButtonsFragment extends Fragment {
                                 NoteAsyncTaskParams param = new NoteAsyncTaskParams();
                                 param.repo = queryAppRepository;
                                 param.note = note;
+                                param.nCallback = nCallback;
 
                                 Log.d("Foo", "Firing and forgetting to insert note");
                                 new InsertNoteMarkAsyncTask().execute(param);
-                                nCallback.refreshQuestions();
+                                // mCallback.refreshQuestions();
 
                             }
                         })
@@ -291,11 +292,12 @@ public class ButtonsFragment extends Fragment {
     private class ConfusionMarkAsyncTaskParams {
         QueryAppRepository repo;
         ConfusionMark confusionMark;
+        RefreshTimestampsInterface mCallback;
     }
 
-    private static class InsertConfusionMarkAsyncTask extends AsyncTask<ConfusionMarkAsyncTaskParams, Void, Void> {
+    private static class InsertConfusionMarkAsyncTask extends AsyncTask<ConfusionMarkAsyncTaskParams, Void, RefreshTimestampsInterface> {
         @Override
-        protected Void doInBackground(ConfusionMarkAsyncTaskParams...params) {
+        protected RefreshTimestampsInterface doInBackground(ConfusionMarkAsyncTaskParams...params) {
             for(ConfusionMarkAsyncTaskParams param : params){
                 QueryAppRepository repo = param.repo;
                 ConfusionMark confusionMark = param.confusionMark;
@@ -309,20 +311,27 @@ public class ButtonsFragment extends Fragment {
 
 
                 Log.d("DebugDB", Integer.toString(repo.getAllConfusionMarksForLecture(param.confusionMark.getLectureId()).size()));
+
+                return param.mCallback;
             }
             return null;
         }
 
+        @Override
+        protected void onPostExecute(RefreshTimestampsInterface mCallback) {
+            mCallback.refreshTime();
+        }
     }
 
     private class NoteAsyncTaskParams {
         QueryAppRepository repo;
         Note note;
+        RefreshQuestionsInterface nCallback;
     }
 
-    private static class InsertNoteMarkAsyncTask extends AsyncTask<NoteAsyncTaskParams, Void, Void> {
+    private static class InsertNoteMarkAsyncTask extends AsyncTask<NoteAsyncTaskParams, Void, RefreshQuestionsInterface> {
         @Override
-        protected Void doInBackground(NoteAsyncTaskParams...params) {
+        protected RefreshQuestionsInterface doInBackground(NoteAsyncTaskParams...params) {
             for(NoteAsyncTaskParams param : params){
                 Note note = param.note;
                 QueryAppRepository repo = param.repo;
@@ -332,10 +341,17 @@ public class ButtonsFragment extends Fragment {
                 Log.d("DebugDB", "Note isPrivate -> " + note.getIsPrivate());
                 Log.d("DebugDB", "Note isResolved -> " + note.getIsResolved());
                 Log.d("DebugDB", "Note lectureId -> " + note.getLectureId());
+
+                return param.nCallback;
             }
             return null;
         }
 
+        @Override
+        protected void onPostExecute(RefreshQuestionsInterface refreshQuestionsInterface) {
+            Log.d("REFRESH", "refreshing notes after inserting a note");
+            refreshQuestionsInterface.refreshQuestions();
+        }
     }
 
 }

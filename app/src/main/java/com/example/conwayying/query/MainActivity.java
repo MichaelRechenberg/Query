@@ -105,12 +105,16 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
     //  with the timestamp list fragment and set the bottom navigation bar to "Timestamps"
     @Override
     public void refreshTime() {
+        Log.d("REFRESH", "We trying time");
+
         TimestampsListFragment times = (TimestampsListFragment) getSupportFragmentManager().findFragmentByTag("Timestamps");
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (times != null && times.isVisible()) {
+            Log.d("REFRESH", "refreshing timestamps when list is visible");
             times.refreshTimestampsList();
         } else {
 
+            Log.d("REFRESH", "Refreshing timestamps when not visible");
             int lectureId = getIntent().getIntExtra("LectureId", -1);
             TimestampsListFragment tlf = TimestampsListFragment.newInstance(queryAppRepository, lectureId);
             transaction.replace(R.id.frame_layout, tlf, "Timestamps");
@@ -120,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
             sortListSpinner.setSelection(0);
         }
 
-        Log.d("REFRESH", "We trying");
     }
 
     // Refresh the questions list
@@ -163,7 +166,18 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
             this.finish();
         }
 
+
         queryAppRepository = new QueryAppRepository(getApplication());
+
+        lectureId = getIntent().getIntExtra("LectureId", -1);
+        // Spinner requires fragments to be created, so they must be initialized before the spinner
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, TimestampsListFragment.newInstance(queryAppRepository, lectureId), "Timestamps");
+        transaction.replace(R.id.lecture_slides_frame_layout, new LectureSlidesFragment(), "LectureSlides");
+        transaction.replace(R.id.buttons_frame_layout, ButtonsFragment.newInstance(lectureId), "ConfusionButtons");
+        transaction.commit();
+
+
 
         // Since bottomNavigationView uses sortListSpinner to change sort criteria on navigation change,
         //  sortListSpinner must be initialized before bottomNavigationView
@@ -183,13 +197,7 @@ public class MainActivity extends AppCompatActivity implements QuestionsListFrag
 
 
 
-        lectureId = getIntent().getIntExtra("LectureId", -1);
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, TimestampsListFragment.newInstance(queryAppRepository, lectureId));
-        transaction.replace(R.id.lecture_slides_frame_layout, new LectureSlidesFragment());
-        transaction.replace(R.id.buttons_frame_layout, ButtonsFragment.newInstance(lectureId));
-        transaction.commit();
 
     }
 

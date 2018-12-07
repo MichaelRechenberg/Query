@@ -33,6 +33,11 @@ public class LectureListActivity extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         QueryAppRepository repo = new QueryAppRepository(getApplication());
         int classId = getIntent().getIntExtra("ClassId", -1);
@@ -45,7 +50,6 @@ public class LectureListActivity extends AppCompatActivity {
         param.classId = classId;
         param.repo = repo;
         new GetLectureDataEntryAsyncTask(this, recyclerView).execute(param);
-
     }
 
     @Override
