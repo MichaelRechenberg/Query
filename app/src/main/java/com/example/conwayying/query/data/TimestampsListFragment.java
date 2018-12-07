@@ -133,7 +133,7 @@ public class TimestampsListFragment extends android.support.v4.app.ListFragment 
 
         int[] to = {R.id.confusionMarkText, R.id.thirdLine};
 
-        adapter = new SimpleAdapter(getActivity(), data, R.layout.timestamps_fragment_list_item, from, to);
+        adapter = new CustomSimpleAdapter(getActivity(), data, R.layout.timestamps_fragment_list_item, from, to);
         setListAdapter(adapter);
     }
 
