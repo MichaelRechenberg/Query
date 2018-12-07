@@ -72,7 +72,6 @@
                     android:layout_marginLeft="15dp"
                     android:layout_weight="0"
                     android:background="@drawable/rounded_corners"
-                    android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
                     android:src="@drawable/twotone_sentiment_very_dissatisfied_24px"/>
                 <!--<Button-->
@@ -128,7 +127,7 @@
                     android:layout_height="44dp"
                     android:layout_gravity="right"
                     android:layout_marginTop="5dp"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="15dp"
                     android:layout_weight="0"
                     android:background="@drawable/rounded_corners"
                     android:adjustViewBounds="true"
@@ -141,7 +140,7 @@
                     android:textAlignment="center"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_marginRight="18dp"
+                    android:layout_marginRight="5dp"
                     android:layout_marginTop="3.5dp"
                     android:layout_weight="0"
                     android:text="@string/question_button_text"
