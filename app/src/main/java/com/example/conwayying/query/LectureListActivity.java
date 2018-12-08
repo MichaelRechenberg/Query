@@ -53,6 +53,25 @@ public class LectureListActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+        //Refresh your stuff here
+        QueryAppRepository repo = new QueryAppRepository(getApplication());
+        int classId = getIntent().getIntExtra("ClassId", -1);
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Set adapter based on data from DB
+        GetLecturesParams param = new GetLecturesParams();
+        param.classId = classId;
+        param.repo = repo;
+        new GetLectureDataEntryAsyncTask(this, recyclerView).execute(param);
+    }
+
+
+    @Override
     public boolean onSupportNavigateUp(){
         //code it to launch an intent to the activity you want
         //Intent intent = new Intent(getApplicationContext(), ClassListActivity.class);
