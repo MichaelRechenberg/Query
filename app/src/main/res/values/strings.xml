@@ -1,6 +1,39 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
+
     <string name="app_name">Query</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_questions">Questions</string>
+    <string name="title_timestamps">Timestamps</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="imgdesc">imgdesc</string>
+    <string name="classTopText">Hello, Mike!</string>
+
+    <string-array name="Planets">
+        <item>Sun</item>
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
+
+    <string name="new_note_confirm_btn_text">Save Question</string>
+    <string name="new_note_dismiss_btn_text">Discard Question</string>
+    <string name="new_note_title_text">Create New Question</string>
+    <string name="new_note_is_private_checkbox_text">Ask Lecturer?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="wtf_button_text">WTF</string>
+    <string name="question_button_text">Ask Question</string>
+    <string name="record_button_text">Time Interval</string>
+
+    
+    <string-array name="sort_list_menu_choices">
+        <item>Date Created</item>
+        <item>Resolved State</item>
+    </string-array>
 </resources>
